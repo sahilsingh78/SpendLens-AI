@@ -38,7 +38,9 @@ const TOOLS = [
 interface ToolSelectorProps {
   value?: ToolId;
 
-  onChange: (id: ToolId) => void;
+  onChange: (
+    id: ToolId
+  ) => void;
 
   disabledIds?: ToolId[];
 }
@@ -48,8 +50,10 @@ export default function ToolSelector({
   onChange,
   disabledIds = [],
 }: ToolSelectorProps) {
+
   return (
-    <div>
+    <div className="flex flex-col h-full">
+
       <label className="block text-sm font-medium mb-2">
         Tool
       </label>
@@ -57,10 +61,13 @@ export default function ToolSelector({
       <select
         value={value ?? ""}
         onChange={(e) =>
-          onChange(e.target.value as ToolId)
+          onChange(
+            e.target.value as ToolId
+          )
         }
-        className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--bg)] outline-none focus:border-[var(--accent)] transition-colors"
+        className="h-14 w-full px-4 rounded-xl border border-[var(--border)] bg-[var(--bg)] outline-none focus:border-[var(--accent)] transition-colors"
       >
+
         <option value="">
           Select a tool
         </option>
@@ -76,12 +83,16 @@ export default function ToolSelector({
             {tool.label}
           </option>
         ))}
+
       </select>
 
-      <p className="text-xs text-[var(--text-dim)] mt-2">
+      <p className="text-xs text-[var(--text-dim)] mt-2 leading-5">
+
         Choose the AI tool currently
         used by your team
+
       </p>
+
     </div>
   );
 }
