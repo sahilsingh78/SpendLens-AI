@@ -130,6 +130,7 @@ export default function HomePage() {
       ===================================== */}
 
       <section
+        id="audit-form"
         ref={auditSectionRef}
         className="relative py-24 px-4 border-y border-[var(--border)] bg-[var(--surface)]"
       >

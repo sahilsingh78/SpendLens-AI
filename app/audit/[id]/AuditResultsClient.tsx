@@ -1,188 +1,164 @@
 "use client";
 
-import SavingsHero from "@/components/audit/SavingsHero";
-import AuditBreakdown from "@/components/audit/AuditBreakdown";
-import ShareAudit from "@/components/audit/ShareAudit";
-import AIInsightCard from "@/components/audit/AIInsightCard";
-import LeadCaptureForm from "@/components/lead/LeadCaptureForm";
+import { AuditResult } from "@/lib/types";
 
-import {
-  ShareableAudit,
-  AuditResult,
-} from "@/lib/types";
-
-interface AuditResultsClientProps {
-  audit:
-    | ShareableAudit
-    | AuditResult;
+function formatCurrencyFull(
+  value: number
+) {
+  return new Intl.NumberFormat(
+    "en-US",
+    {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0,
+    }
+  ).format(value);
 }
 
-export default function AuditResultsClient({
+function formatPercent(
+  value: number
+) {
+  return `${value}%`;
+}
+
+interface SavingsHeroProps {
+  audit: AuditResult;
+}
+
+export default function SavingsHero({
   audit,
-}: AuditResultsClientProps) {
-  const safeAudit =
-    audit as AuditResult;
+}: SavingsHeroProps) {
+  const totalMonthlySpend =
+    audit.totalMonthlySpend;
+
+  const totalMonthlySavings =
+    audit.totalMonthlySavings;
+
+  const totalAnnualSavings =
+    audit.totalAnnualSavings;
+
+  const savingsPercentage =
+    audit.savingsPercentage;
 
   return (
-    <main className="relative py-16 px-4">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <section className="relative overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-8 md:p-10">
 
-        {/* Header */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(0,255,163,0.08),transparent_35%)]" />
 
-        <div className="text-center animate-fade-in">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border)] bg-[var(--surface)] text-xs text-[var(--text-muted)] font-mono-custom mb-5">
-            <span className="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse" />
+      <div className="relative z-10 grid gap-8 md:grid-cols-2">
 
-            AUDIT COMPLETE
+        {/* Left */}
+
+        <div>
+          <div className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--bg)] px-3 py-1 text-xs font-medium text-[var(--text-muted)]">
+            Potential Optimization
           </div>
 
-          <h1
-            className="text-4xl md:text-5xl font-black mb-4"
-            style={{
-              fontFamily:
-                "Syne, sans-serif",
-            }}
-          >
-            Your AI spend audit
-          </h1>
+          <h2 className="mt-5 text-4xl md:text-5xl font-black leading-tight">
+            Save{" "}
+            <span className="text-[var(--accent)]">
+              {formatCurrencyFull(
+                totalAnnualSavings
+              )}
+            </span>{" "}
+            per year
+          </h2>
 
-          <p className="max-w-2xl mx-auto text-[var(--text-muted)] text-lg leading-8">
-            We analyzed your AI
-            tooling stack and
-            identified optimization
-            opportunities across
-            pricing, seat allocation,
-            and workflow overlap.
+          <p className="mt-4 text-[var(--text-muted)] leading-7 max-w-xl">
+            Your current AI stack
+            contains overlapping tools,
+            underutilized seats, and
+            opportunities to consolidate
+            subscriptions.
           </p>
+
+          <div className="mt-6 flex flex-wrap gap-3">
+
+            <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg)] px-4 py-3">
+              <p className="text-xs uppercase tracking-wide text-[var(--text-dim)]">
+                Monthly Savings
+              </p>
+
+              <p className="mt-1 text-2xl font-bold text-[var(--accent)]">
+                {formatCurrencyFull(
+                  totalMonthlySavings
+                )}
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg)] px-4 py-3">
+              <p className="text-xs uppercase tracking-wide text-[var(--text-dim)]">
+                Savings %
+              </p>
+
+              <p className="mt-1 text-2xl font-bold">
+                {formatPercent(
+                  savingsPercentage
+                )}
+              </p>
+            </div>
+
+          </div>
         </div>
 
-        {/* Savings Hero */}
+        {/* Right */}
 
-        <SavingsHero
-          audit={safeAudit}
-        />
+        <div className="flex flex-col justify-between rounded-2xl border border-[var(--border)] bg-[var(--bg)] p-6">
 
-        {/* Main Grid */}
+          <div>
+            <p className="text-sm text-[var(--text-muted)]">
+              Current monthly spend
+            </p>
 
-        <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-6 items-start">
+            <h3 className="mt-2 text-4xl font-black">
+              {formatCurrencyFull(
+                totalMonthlySpend
+              )}
+              <span className="text-lg font-medium text-[var(--text-muted)]">
+                /mo
+              </span>
+            </h3>
 
-          {/* Left Column */}
-
-          <div className="space-y-6">
-
-            <AuditBreakdown
-              audit={safeAudit}
-            />
-
-            <AIInsightCard
-              audit={safeAudit}
-            />
-
+            <p className="mt-3 text-xs text-[var(--text-dim)]">
+              Current:{" "}
+              {formatCurrencyFull(
+                totalMonthlySpend
+              )}
+              /mo across{" "}
+              {audit.input?.tools?.length ?? 0}{" "}
+              tool
+              {(audit.input?.tools?.length ?? 0) !== 1
+                ? "s"
+                : ""}
+            </p>
           </div>
 
-          {/* Right Column */}
+          <div className="mt-8 space-y-3">
 
-          <div className="space-y-6 lg:sticky lg:top-24">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-[var(--text-muted)]">
+                Estimated optimized spend
+              </span>
 
-            <ShareAudit
-              auditId={
-                safeAudit.id
-              }
-            />
+              <span className="font-semibold">
+                {formatCurrencyFull(
+                  totalMonthlySpend -
+                    totalMonthlySavings
+                )}
+                /mo
+              </span>
+            </div>
 
-            <LeadCaptureForm
-                auditId={safeAudit.id}
-                monthlySavings={
-                    safeAudit.totalMonthlySavings
-                }
-                onSuccess={() => {
-                    console.log(
-                    "Lead captured successfully"
-                    );
-                }}
-            />
-
-            {/* Snapshot Card */}
-
-            <div className="p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)]">
-              <h3
-                className="text-sm font-semibold mb-4"
+            <div className="h-3 overflow-hidden rounded-full bg-[var(--surface)]">
+              <div
+                className="h-full rounded-full bg-[var(--accent)]"
                 style={{
-                  fontFamily:
-                    "Syne, sans-serif",
+                  width: `${Math.min(
+                    savingsPercentage,
+                    100
+                  )}%`,
                 }}
-              >
-                Audit snapshot
-              </h3>
-
-              <div className="space-y-4 text-sm">
-
-                <div className="flex items-center justify-between">
-                  <span className="text-[var(--text-muted)]">
-                    Team size
-                  </span>
-
-                  <span className="font-medium">
-                    {
-                      safeAudit.input
-                        .teamSize
-                    }
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-[var(--text-muted)]">
-                    Use case
-                  </span>
-
-                  <span className="capitalize font-medium">
-                    {
-                      safeAudit.input
-                        .useCase
-                    }
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-[var(--text-muted)]">
-                    Tools audited
-                  </span>
-
-                  <span className="font-medium">
-                    {
-                      safeAudit.input
-                        .tools.length
-                    }
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-[var(--text-muted)]">
-                    Audit tier
-                  </span>
-
-                  <span className="font-medium capitalize text-[var(--accent)]">
-                    {
-                      safeAudit.tier
-                    }
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-[var(--text-muted)]">
-                    Potential savings
-                  </span>
-
-                  <span className="font-semibold text-[var(--accent)]">
-                    $
-                    {
-                      safeAudit.totalMonthlySavings
-                    }
-                    /mo
-                  </span>
-                </div>
-
-              </div>
+              />
             </div>
 
           </div>
@@ -190,6 +166,7 @@ export default function AuditResultsClient({
         </div>
 
       </div>
-    </main>
+
+    </section>
   );
 }
