@@ -8,13 +8,13 @@ SpendLens AI helps users analyze expenses, identify spending patterns, generate 
 
 # 🌐 Live Demo
 
-Coming Soon
+🔗 https://spend-lens-ai-uah9.vercel.app/
 
 ---
 
 # 📦 Repository
 
-GitHub Repository:
+GitHub Repository: https://github.com/sahilsingh78/SpendLens-AI
 
 [SpendLens AI Repository](https://github.com/sahilsingh78/SpendLens-AI?utm_source=chatgpt.com)
 
@@ -58,6 +58,22 @@ GitHub Repository:
 ## Deployment
 
 - Vercel
+
+---
+
+# 📸 Screenshots
+
+## Landing Page
+![alt text](image.png)
+
+## Spend Audit Form
+![alt text](image-1.png)
+
+## Audit Results Dashboard
+![alt text](image-2.png) ![alt text](image-3.png)
+
+## Shareable Public Report
+![alt text](image-4.png) ![alt text](image-5.png)
 
 ---
 
