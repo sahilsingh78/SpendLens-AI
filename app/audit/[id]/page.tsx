@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 
 import Navbar from "@/components/shared/Navbar";
-
 import Footer from "@/components/landing/Footer";
 
 import AuditResultsClient from "./AuditResultsClient";
@@ -9,23 +8,22 @@ import AuditResultsClient from "./AuditResultsClient";
 import { getAudit } from "@/lib/supabase";
 
 interface AuditPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function AuditPage({
   params,
 }: AuditPageProps) {
-  const id = params.id;
+  const { id } = await params;
 
   if (!id) {
     notFound();
   }
 
   try {
-    const audit =
-      await getAudit(id);
+    const audit = await getAudit(id);
 
     return (
       <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] overflow-x-hidden">
@@ -38,9 +36,7 @@ export default async function AuditPage({
 
         <Navbar />
 
-        <AuditResultsClient
-          audit={audit}
-        />
+        <AuditResultsClient audit={audit} />
 
         <Footer />
       </div>
