@@ -1,6 +1,6 @@
 "use client";
 
-import { AuditResult } from "@/lib/types";
+import { ShareableAudit } from "@/lib/types";
 
 function formatCurrencyFull(
   value: number
@@ -22,12 +22,13 @@ function formatPercent(
 }
 
 interface SavingsHeroProps {
-  audit: AuditResult;
+  audit: ShareableAudit;
 }
 
 export default function SavingsHero({
   audit,
 }: SavingsHeroProps) {
+
   const totalMonthlySpend =
     audit.totalMonthlySpend;
 
@@ -50,17 +51,20 @@ export default function SavingsHero({
         {/* Left */}
 
         <div>
+
           <div className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--bg)] px-3 py-1 text-xs font-medium text-[var(--text-muted)]">
             Potential Optimization
           </div>
 
           <h2 className="mt-5 text-4xl md:text-5xl font-black leading-tight">
             Save{" "}
+
             <span className="text-[var(--accent)]">
               {formatCurrencyFull(
                 totalAnnualSavings
               )}
             </span>{" "}
+
             per year
           </h2>
 
@@ -75,6 +79,7 @@ export default function SavingsHero({
           <div className="mt-6 flex flex-wrap gap-3">
 
             <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg)] px-4 py-3">
+
               <p className="text-xs uppercase tracking-wide text-[var(--text-dim)]">
                 Monthly Savings
               </p>
@@ -84,9 +89,11 @@ export default function SavingsHero({
                   totalMonthlySavings
                 )}
               </p>
+
             </div>
 
             <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg)] px-4 py-3">
+
               <p className="text-xs uppercase tracking-wide text-[var(--text-dim)]">
                 Savings %
               </p>
@@ -96,9 +103,11 @@ export default function SavingsHero({
                   savingsPercentage
                 )}
               </p>
+
             </div>
 
           </div>
+
         </div>
 
         {/* Right */}
@@ -106,50 +115,67 @@ export default function SavingsHero({
         <div className="flex flex-col justify-between rounded-2xl border border-[var(--border)] bg-[var(--bg)] p-6">
 
           <div>
+
             <p className="text-sm text-[var(--text-muted)]">
               Current monthly spend
             </p>
 
             <h3 className="mt-2 text-4xl font-black">
+
               {formatCurrencyFull(
                 totalMonthlySpend
               )}
+
               <span className="text-lg font-medium text-[var(--text-muted)]">
                 /mo
               </span>
+
             </h3>
 
             <p className="mt-3 text-xs text-[var(--text-dim)]">
+
               Current:{" "}
+
               {formatCurrencyFull(
                 totalMonthlySpend
               )}
+
               /mo across{" "}
-              {audit.input?.tools?.length ?? 0}{" "}
+
+              {audit.toolCount ?? 0}{" "}
+
               tool
-              {(audit.input?.tools?.length ?? 0) !== 1
+              {(audit.toolCount ?? 0) !== 1
                 ? "s"
                 : ""}
+
             </p>
+
           </div>
 
           <div className="mt-8 space-y-3">
 
             <div className="flex items-center justify-between text-sm">
+
               <span className="text-[var(--text-muted)]">
                 Estimated optimized spend
               </span>
 
               <span className="font-semibold">
+
                 {formatCurrencyFull(
                   totalMonthlySpend -
                     totalMonthlySavings
                 )}
+
                 /mo
+
               </span>
+
             </div>
 
             <div className="h-3 overflow-hidden rounded-full bg-[var(--surface)]">
+
               <div
                 className="h-full rounded-full bg-[var(--accent)]"
                 style={{
@@ -159,6 +185,7 @@ export default function SavingsHero({
                   )}%`,
                 }}
               />
+
             </div>
 
           </div>
