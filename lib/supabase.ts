@@ -1,11 +1,3 @@
-// lib/supabase.ts
-
-declare module "@supabase/supabase-js" {
-  export function createClient(
-    supabaseUrl: string,
-    supabaseAnonKey: string
-  ): any;
-}
 
 import { createClient } from "@supabase/supabase-js";
 
