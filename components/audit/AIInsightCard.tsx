@@ -1,75 +1,66 @@
 "use client";
-import { useEffect, useState } from "react";
-import { AuditResult } from "@/lib/types";
-import Loader from "@/components/shared/Loader";
+
+import { ShareableAudit } from "@/lib/types";
 
 interface AIInsightCardProps {
-  audit: AuditResult;
+  audit: ShareableAudit;
 }
 
-export default function AIInsightCard({ audit }: AIInsightCardProps) {
-  const [summary, setSummary] = useState<string | null>(audit.aiSummary ?? null);
-  const [loading, setLoading] = useState(!audit.aiSummary);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    if (audit.aiSummary) return;
-    let cancelled = false;
-
-    async function fetchSummary() {
-      try {
-        const res = await fetch("/api/summary", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(audit),
-        });
-        if (!res.ok) throw new Error("Failed");
-        const data = await res.json();
-        if (!cancelled) setSummary(data.summary);
-      } catch {
-        if (!cancelled) setError(true);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-
-    fetchSummary();
-    return () => { cancelled = true; };
-  }, [audit]);
+export default function AIInsightCard({
+  audit,
+}: AIInsightCardProps) {
 
   return (
-    <div className="p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] relative overflow-hidden">
-      {/* Subtle accent line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--accent)]/40 to-transparent" />
+    <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6">
 
       <div className="flex items-center gap-2 mb-4">
-        <div className="w-6 h-6 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center text-xs">
-          🤖
-        </div>
-        <h3 className="text-sm font-semibold" style={{ fontFamily: "Syne, sans-serif" }}>
-          AI insight
-        </h3>
-        <span className="text-xs text-[var(--text-dim)] font-mono ml-auto">claude-3-5-haiku</span>
+
+        <div className="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse" />
+
+        <p className="text-sm font-semibold">
+          AI Optimization Insight
+        </p>
+
       </div>
 
-      {loading && (
-        <div className="flex items-center gap-3 py-4">
-          <Loader size="sm" label="" />
-          <span className="text-sm text-[var(--text-muted)] animate-pulse">
-            Generating your personalized summary…
-          </span>
+      <p className="text-[var(--text-muted)] leading-7 text-sm">
+
+        Based on your current AI tooling stack,
+        there are opportunities to reduce
+        overlapping subscriptions, optimize seat
+        allocation, and consolidate workflows
+        for better cost efficiency.
+
+      </p>
+
+      <div className="mt-5 grid grid-cols-2 gap-4 text-sm">
+
+        <div className="rounded-xl border border-[var(--border)] bg-[var(--bg)] p-4">
+
+          <p className="text-[var(--text-dim)] mb-1">
+            Team Size
+          </p>
+
+          <p className="font-semibold">
+            {audit.teamSize}
+          </p>
+
         </div>
-      )}
 
-      {error && !loading && (
-        <p className="text-sm text-[var(--text-muted)] italic">
-          AI summary unavailable — all audit data above is still accurate and complete.
-        </p>
-      )}
+        <div className="rounded-xl border border-[var(--border)] bg-[var(--bg)] p-4">
 
-      {summary && !loading && (
-        <p className="text-sm text-[var(--text-muted)] leading-relaxed">{summary}</p>
-      )}
+          <p className="text-[var(--text-dim)] mb-1">
+            Tools Audited
+          </p>
+
+          <p className="font-semibold">
+            {audit.toolCount}
+          </p>
+
+        </div>
+
+      </div>
+
     </div>
   );
 }
