@@ -8,8 +8,8 @@ export default function PricingInput({
   onChange,
 }: PricingInputProps) {
   return (
-    <div>
-      <label className="block text-sm font-medium mb-2">
+    <div className="flex flex-col gap-2">
+      <label className="text-sm font-medium">
         Monthly spend
       </label>
 
@@ -27,11 +27,11 @@ export default function PricingInput({
             onChange(Number(e.target.value))
           }
           placeholder="20"
-          className="w-full pl-8 pr-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--bg)] outline-none focus:border-[var(--accent)] transition-colors"
+          className="w-full h-[52px] pl-8 pr-4 rounded-xl border border-[var(--border)] bg-[var(--bg)] outline-none focus:border-[var(--accent)] transition-colors"
         />
       </div>
 
-      <p className="text-xs text-[var(--text-dim)] mt-2">
+      <p className="text-xs text-[var(--text-dim)] min-h-[40px]">
         Estimated monthly subscription cost
       </p>
     </div>
