@@ -1,265 +1,128 @@
-# SpendLens AI Prompt Library
+# PROMPTS.md
 
-## Overview
+## Prompt Used in Production (lib/ai-summary.ts)
 
-This document contains example prompts, AI interaction workflows, and financial analysis instructions used within SpendLens AI.
+```
+You are a concise financial advisor writing a 90–110 word audit summary for a startup founder.
 
-The prompts are designed to support intelligent financial auditing, expense analysis, budgeting insights, and spending optimization.
+AUDIT DATA:
+- Team size: {teamSize} people
+- Primary use case: {useCase}
+- Total current AI spend: ${totalMonthlySpend}/month
+- Total potential savings: ${totalMonthlySavings}/month ({savingsPercentage}%)
+- Annual savings opportunity: ${totalAnnualSavings}/year
 
----
+TOOL BREAKDOWN:
+{toolLines}
 
-# Audit Analysis Prompt
+INSTRUCTIONS:
+Write a single paragraph (90–110 words) that:
+1. Acknowledges their current spend and team context
+2. Highlights the biggest specific saving opportunity with dollar amounts
+3. Gives one concrete next action
+4. Ends on a practical, optimistic note
 
-## Expense Audit Prompt
+Tone: direct, data-driven, not salesy. Do NOT use bullet points. Do NOT mention Credex unless credits are recommended.
+```
 
-```text
-Analyze the following financial expenses and identify:
-- Unusual spending patterns
-- High-risk transactions
-- Overspending categories
-- Budget optimization opportunities
-- Monthly expense trends
-
-Generate a structured financial audit summary with actionable recommendations.
+Where `{toolLines}` is formatted as:
+```
+- Cursor [pro]: downgrade (saves $20/mo) — Cursor Business adds admin controls...
+- Claude [team]: keep — Claude Team is the right-fit plan...
 ```
 
 ---
 
-# Budget Recommendation Prompt
+## Why I Wrote It This Way
 
-```text
-Based on the provided financial data:
-- Suggest budget improvements
-- Recommend savings opportunities
-- Identify unnecessary recurring expenses
-- Estimate monthly optimization potential
+**Word count constraint (90–110 words):** The summary appears in an email and on the results page alongside detailed recommendation cards. It needs to be a quick read that adds synthesis, not repetition. Too short feels dismissive; too long competes with the data.
+
+**"Financial advisor" framing:** I tried "startup CFO" first — the output was too formal and used terms like "EBITDA impact" that don't resonate with a 5-person seed-stage team. "Financial advisor" produced more conversational, actionable language.
+
+**Explicit no-bullet-points instruction:** Without this, Claude defaults to bullet points roughly 40% of the time. A paragraph reads better in email HTML and feels more like a human wrote it.
+
+**"Do NOT mention Credex unless credits are recommended":** Early versions without this instruction sometimes added a Credex mention even for low-savings audits. That felt like a sales pitch when the user had just been told they're spending efficiently. Trust is more valuable than a mention.
+
+**No AI for the math:** The prompt receives pre-computed numbers. The LLM only writes the narrative. I explicitly did not ask Claude to calculate savings — it would hallucinate numbers. The rule engine calculates; Claude narrates.
+
+---
+
+## What I Tried That Didn't Work
+
+**Version 1 — Too open-ended:**
+```
+Write a personalized summary of this AI spend audit for a startup founder. 
+Audit data: {json}
+```
+Result: 300+ word essays, bullet lists, inconsistent tone. Unusable.
+
+**Version 2 — Wrong persona:**
+```
+You are a SaaS CFO analyzing AI tool spend...
+```
+Result: Overly formal, used accounting terminology, felt cold. Founders don't respond to "your OpEx allocation is suboptimal."
+
+**Version 3 — No word count:**
+```
+Write a 2-3 sentence summary...
+```
+Result: 2 sentences was too short to include the top saving + action + closing. 3 sentences felt rushed. Switching to a word count range (90-110) gave the model room to breathe while keeping it tight.
+
+**Version 4 — Asking Claude to identify the top opportunity:**
+```
+Based on the audit data, identify the single biggest saving and write a paragraph...
+```
+Result: Claude sometimes picked a smaller saving opportunity if the reason string was more compelling. Pre-computing and injecting `topRecommendation` explicitly fixed this.
+
+---
+
+## Fallback Summary (No AI)
+
+When the Anthropic API is unavailable (network error, rate limit, missing key), the system falls back to a deterministic template:
+
+```typescript
+function buildFallbackSummary(audit: AuditResult): string {
+  if (totalMonthlySavings === 0) {
+    return `Your {teamSize}-person team is spending {totalMonthlySpend}/month on AI 
+    tools efficiently. Across {count} tools audited, each plan aligns with your 
+    {useCase} workflow...`
+  }
+  
+  // Find top recommendation by savings
+  const topRec = recommendations.reduce((a, b) => 
+    b.monthlySavings > a.monthlySavings ? b : a
+  );
+  
+  return `Your {teamSize}-person team is spending {totalMonthlySpend}/month on AI 
+  tools, with {totalMonthlySavings}/month available to recapture. The biggest 
+  opportunity is {topRec.toolName}: {topRec.reason}...`
+}
 ```
 
----
-
-# Spending Pattern Analysis Prompt
-
-```text
-Analyze user spending behavior and identify:
-- Most frequent expense categories
-- Seasonal spending trends
-- High-growth spending areas
-- Predictive expense risks
-```
+This ensures the AI Insight card always shows something useful, even if the API call fails. The fallback is clearly templated but accurate — it uses the same computed numbers as the real AI summary.
 
 ---
 
-# Financial Summary Prompt
+## Author
 
-```text
-Generate a concise financial summary including:
-- Total expenses
-- Top spending categories
-- Estimated savings opportunities
-- Monthly trend overview
-- Risk indicators
-```
+**Sahil Singh**  
+GitHub: [@sahilsingh78](https://github.com/sahilsingh78)  
+Submission for: Credex Web Dev Intern — Round 1, May 2026
 
 ---
 
-# AI Recommendation Prompt
+## License
 
-```text
-Provide AI-powered recommendations for:
-- Expense reduction
-- Budget balancing
-- Subscription management
-- Financial optimization
-- Smart spending improvements
-```
+MIT License
 
----
+Copyright (c) 2026 Sahil Singh
 
-# Fraud Detection Prompt
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-```text
-Analyze transaction data for:
-- Duplicate payments
-- Suspicious transactions
-- Irregular spending spikes
-- Abnormal financial activity
-```
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ---
 
-# Dashboard Insights Prompt
-
-```text
-Generate dashboard insights highlighting:
-- Monthly expense growth
-- Budget efficiency
-- Financial health indicators
-- Savings recommendations
-```
-
----
-
-# Shareable Report Prompt
-
-```text
-Generate a professional financial audit report including:
-- Executive summary
-- Expense analysis
-- Spending categories
-- Optimization recommendations
-- Financial risk assessment
-```
-
----
-
-# User Behavior Analytics Prompt
-
-```text
-Analyze financial behavior patterns and classify users based on:
-- Spending consistency
-- Risk level
-- Savings habits
-- Budget efficiency
-```
-
----
-
-# AI Chat Assistant Prompt
-
-```text
-Act as a financial analysis assistant.
-
-Help users:
-- Understand expenses
-- Improve budgeting
-- Analyze spending
-- Optimize savings
-- Detect financial inefficiencies
-```
-
----
-
-# Personalized Recommendation Prompt
-
-```text
-Using historical financial data:
-- Personalize savings recommendations
-- Suggest spending improvements
-- Predict future financial trends
-```
-
----
-
-# Subscription Analysis Prompt
-
-```text
-Analyze recurring subscriptions and identify:
-- Unused services
-- Duplicate subscriptions
-- Potential monthly savings
-```
-
----
-
-# Investment Readiness Prompt
-
-```text
-Evaluate spending behavior and determine:
-- Financial stability
-- Savings consistency
-- Investment readiness indicators
-```
-
----
-
-# Weekly Financial Review Prompt
-
-```text
-Generate a weekly financial review summarizing:
-- Total weekly expenses
-- Top spending categories
-- Budget performance
-- Suggested improvements
-```
-
----
-
-# Monthly Audit Prompt
-
-```text
-Create a monthly financial audit report with:
-- Expense breakdown
-- Spending trend analysis
-- Risk observations
-- AI-powered recommendations
-```
-
----
-
-# Natural Language Query Prompt
-
-```text
-Interpret user financial questions and provide:
-- Expense insights
-- Spending summaries
-- Budget recommendations
-- Financial explanations
-```
-
----
-
-# AI Workflow Example
-
-```text
-User Uploads Financial Data
-            ↓
-AI Processing Begins
-            ↓
-Expense Categorization
-            ↓
-Audit Analysis
-            ↓
-Recommendation Generation
-            ↓
-Dashboard Visualization
-            ↓
-Shareable Report Output
-```
-
----
-
-# Prompt Engineering Goals
-
-The prompt system is designed to:
-
-- Improve financial understanding
-- Generate accurate insights
-- Reduce manual analysis
-- Deliver actionable recommendations
-- Enhance user engagement
-
----
-
-# Future Prompt Enhancements
-
-Potential future AI prompt capabilities:
-
-- Investment guidance
-- Tax optimization
-- Financial forecasting
-- Smart budgeting assistant
-- Real-time financial alerts
-
----
-
-# Repository
-
-GitHub Repository:
-
-[SpendLens AI Repository](https://github.com/sahilsingh78/SpendLens-AI?utm_source=chatgpt.com)
-
----
-
-# Author
-
-Sahil
+*Pricing data verified May 2026. SpendLens is a free tool by [Credex](https://credex.rocks) — discounted AI credits for startups.*

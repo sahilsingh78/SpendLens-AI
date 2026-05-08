@@ -1,262 +1,118 @@
-# SpendLens AI Pricing Data
+# PRICING_DATA.md
 
-## Overview
-
-This document defines the pricing structure, subscription plans, feature access, and monetization strategy for SpendLens AI.
-
-SpendLens AI is an AI-powered financial audit and expense analysis platform designed for scalable SaaS deployment.
+Every price in the audit engine traces to an official vendor pricing page. Verified during submission week (May 6–12, 2026).
 
 ---
 
-# Pricing Strategy
+## Cursor
 
-The pricing model follows a freemium SaaS structure:
-
-- Free plan for onboarding users
-- Premium plans for advanced analytics
-- Business plans for teams and organizations
-- Enterprise solutions for scalable deployments
+- Hobby: $0/user/month — https://cursor.com/pricing — verified 2026-05-07
+- Pro: $20/user/month — https://cursor.com/pricing — verified 2026-05-07
+- Business: $40/user/month — https://cursor.com/pricing — verified 2026-05-07
+- Enterprise: ~$60/user/month (custom, estimate based on public references) — https://cursor.com/pricing — verified 2026-05-07
 
 ---
 
-# Subscription Plans
+## GitHub Copilot
 
-| Plan | Price | Billing | Target Users |
-|------|--------|----------|---------------|
-| Free | ₹0 | Monthly | Individuals |
-| Pro | ₹499/month | Monthly | Power Users |
-| Business | ₹1999/month | Monthly | Teams & Startups |
-| Enterprise | Custom Pricing | Annual | Large Organizations |
+- Individual: $10/user/month (or $100/year) — https://github.com/features/copilot#pricing — verified 2026-05-07
+- Business: $19/user/month — https://github.com/features/copilot#pricing — verified 2026-05-07
+- Enterprise: $39/user/month — https://github.com/features/copilot#pricing — verified 2026-05-07
 
 ---
 
-# Free Plan
+## Claude (Anthropic)
 
-## Features
-
-- Basic expense tracking
-- Limited audit reports
-- Standard dashboard
-- Basic analytics
-- Community support
-
-## Limitations
-
-- Limited audits per month
-- Restricted export options
-- No advanced AI insights
+- Free: $0 — https://claude.ai/upgrade — verified 2026-05-07
+- Pro: $20/user/month — https://claude.ai/upgrade — verified 2026-05-07
+- Max (5x): $100/user/month — https://claude.ai/upgrade — verified 2026-05-07
+- Max (20x): $200/user/month — https://claude.ai/upgrade — verified 2026-05-07
+- Team: $30/user/month (min 2 seats) — https://claude.ai/upgrade — verified 2026-05-07
+- Enterprise: custom (~$60/user/month estimate) — https://www.anthropic.com/claude-for-work — verified 2026-05-07
 
 ---
 
-# Pro Plan
+## ChatGPT (OpenAI)
 
-## Price
-
-₹499/month
-
-## Features
-
-- Unlimited audits
-- AI-powered recommendations
-- Advanced analytics dashboard
-- Exportable reports
-- Priority support
-- Faster processing
-
-## Best For
-
-- Freelancers
-- Professionals
-- Advanced users
+- Free: $0 — https://openai.com/chatgpt/pricing/ — verified 2026-05-07
+- Plus: $20/user/month — https://openai.com/chatgpt/pricing/ — verified 2026-05-07
+- Team: $30/user/month (min 2 seats) — https://openai.com/chatgpt/pricing/ — verified 2026-05-07
+- Enterprise: custom (~$60/user/month estimate) — https://openai.com/chatgpt/pricing/ — verified 2026-05-07
 
 ---
 
-# Business Plan
+## Anthropic API
 
-## Price
-
-₹1999/month
-
-## Features
-
-- Team collaboration
-- Shared dashboards
-- Advanced reporting
-- Team analytics
-- Role-based access
-- Multi-user support
-- Premium AI features
-
-## Best For
-
-- Startups
-- Small businesses
-- Finance teams
+- Pay-as-you-go: per token, no monthly fee
+  - Claude 3.5 Haiku: $0.80/MTok input, $4/MTok output — https://www.anthropic.com/pricing — verified 2026-05-07
+  - Claude 3.5 Sonnet: $3/MTok input, $15/MTok output — https://www.anthropic.com/pricing — verified 2026-05-07
+  - Claude 3 Opus: $15/MTok input, $75/MTok output — https://www.anthropic.com/pricing — verified 2026-05-07
+- Note: Users enter their actual monthly spend in the form. The engine flags spend >$200/mo for Credex credits opportunity.
 
 ---
 
-# Enterprise Plan
+## OpenAI API
 
-## Pricing
-
-Custom pricing based on scale and integrations.
-
-## Features
-
-- Dedicated infrastructure
-- Enterprise support
-- Custom API integrations
-- Advanced security controls
-- SLA guarantees
-- Custom deployment options
+- Pay-as-you-go: per token, no monthly fee
+  - GPT-4o: $2.50/MTok input, $10/MTok output — https://openai.com/api/pricing/ — verified 2026-05-07
+  - GPT-4o mini: $0.15/MTok input, $0.60/MTok output — https://openai.com/api/pricing/ — verified 2026-05-07
+  - o1: $15/MTok input, $60/MTok output — https://openai.com/api/pricing/ — verified 2026-05-07
+- Note: Same as Anthropic API — users enter actual monthly spend, engine evaluates credit opportunity.
 
 ---
 
-# Add-On Features
+## Gemini (Google)
 
-Potential premium add-ons:
-
-| Feature | Estimated Price |
-|----------|----------------|
-| AI Financial Advisor | ₹299/month |
-| Tax Report Generator | ₹199/month |
-| API Access | ₹999/month |
-| Advanced Analytics | ₹399/month |
+- Free: $0 — https://one.google.com/about/ai-premium — verified 2026-05-08
+- Advanced (Google One AI Premium): $19.99/month per user — https://one.google.com/about/ai-premium — verified 2026-05-08
+  - Note: Bundled with 2TB Google One storage. Price reflects the AI-relevant portion.
+- Gemini for Google Workspace Business: $20/user/month — https://workspace.google.com/intl/en/products/gemini/ — verified 2026-05-08
+- Gemini for Google Workspace Enterprise: $30/user/month — https://workspace.google.com/intl/en/products/gemini/ — verified 2026-05-08
+- API (Gemini API via Google AI Studio / Vertex): pay-per-token — https://ai.google.dev/pricing — verified 2026-05-08
 
 ---
 
-# Revenue Streams
+## Windsurf (Codeium)
 
-## Primary Revenue
-
-- Subscription plans
-- Recurring SaaS revenue
-
-## Secondary Revenue
-
-- API licensing
-- Enterprise onboarding
-- Consulting integrations
-- Premium AI modules
+- Free: $0/user/month — https://windsurf.com/pricing — verified 2026-05-08
+- Pro: $15/user/month — https://windsurf.com/pricing — verified 2026-05-08
+- Teams: $35/user/month — https://windsurf.com/pricing — verified 2026-05-08
+- Enterprise: custom (~$60/user/month estimate) — https://windsurf.com/pricing — verified 2026-05-08
 
 ---
 
-# Pricing Objectives
+## Notes on Pricing Methodology
 
-The pricing strategy aims to:
+1. **Enterprise prices** — Most vendors don't publish enterprise pricing publicly. Estimates are based on public references in analyst reports, community posts, and vendor sales documentation. Marked as estimates in the engine reasoning strings.
 
-- Encourage user adoption
-- Maintain low entry barriers
-- Maximize recurring revenue
-- Support long-term scalability
+2. **API tools** — Anthropic API and OpenAI API are pay-per-token. The audit engine doesn't model token consumption (too variable). Instead, users enter their actual monthly bill. The engine evaluates whether Credex credits would save money at spend levels above $200/month.
 
----
+3. **Currency** — All prices are USD as published on vendor pricing pages. No conversion applied.
 
-# Competitive Positioning
-
-SpendLens AI pricing is designed to remain:
-
-- Affordable
-- Scalable
-- Developer-friendly
-- Startup-friendly
+4. **Verification date** — All prices verified May 7–8, 2026. AI pricing changes frequently; re-verify before any production use beyond the submission window.
 
 ---
 
-# Cost Considerations
+## Author
 
-Operational cost factors include:
-
-- Supabase database usage
-- Vercel hosting
-- AI API processing
-- Storage and bandwidth
-- Monitoring infrastructure
+**Sahil Singh**  
+GitHub: [@sahilsingh78](https://github.com/sahilsingh78)  
+Submission for: Credex Web Dev Intern — Round 1, May 2026
 
 ---
 
-# Discount Strategy
+## License
 
-Potential discount models:
+MIT License
 
-- Annual billing discounts
-- Student plans
-- Startup credits
-- Early adopter offers
+Copyright (c) 2026 Sahil Singh
 
----
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-# Trial Strategy
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-## Free Trial Features
-
-Users may receive:
-
-- 14-day Pro access
-- Full dashboard capabilities
-- AI recommendations
-- Export access
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ---
 
-# Upgrade Workflow
-
-```text
-Free User
-     ↓
-Feature Usage
-     ↓
-Upgrade Prompt
-     ↓
-Pro Subscription
-     ↓
-Recurring Revenue
-```
-
----
-
-# Monetization Roadmap
-
-Future monetization opportunities:
-
-- Banking integrations
-- AI financial planning
-- Automated budgeting
-- Investment analytics
-- White-label solutions
-
----
-
-# KPI Targets
-
-Key monetization goals:
-
-- Increase conversion rate
-- Reduce churn
-- Improve retention
-- Grow monthly recurring revenue
-
----
-
-# Long-Term Pricing Vision
-
-The long-term goal is to build a scalable AI-powered SaaS platform with:
-
-- Flexible pricing
-- Global accessibility
-- Enterprise scalability
-- Sustainable recurring revenue
-
----
-
-# Repository
-
-GitHub Repository:
-
-[SpendLens AI Repository](https://github.com/sahilsingh78/SpendLens-AI?utm_source=chatgpt.com)
-
----
-
-# Author
-
-Sahil
+*Pricing data verified May 2026. SpendLens is a free tool by [Credex](https://credex.rocks) — discounted AI credits for startups.*

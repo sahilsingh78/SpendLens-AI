@@ -1,307 +1,134 @@
-# SpendLens AI Testing Documentation
+# TESTS.md
 
-## Overview
-
-This document outlines the testing strategy, testing workflows, validation methods, and quality assurance practices used in SpendLens AI.
-
-The goal of testing is to ensure:
-
-- Stable application behavior
-- Accurate audit processing
-- Responsive user experience
-- Secure API handling
-- Reliable deployment builds
-
----
-
-# Testing Objectives
-
-Primary testing goals include:
-
-- Detect frontend issues
-- Validate backend functionality
-- Prevent runtime failures
-- Ensure build stability
-- Improve platform reliability
-
----
-
-# Testing Categories
-
-## 1. Frontend Testing
-
-Frontend testing focuses on:
-
-- UI rendering
-- Responsive layouts
-- Navigation workflows
-- Component behavior
-- State management
-
----
-
-# Component Testing
-
-Core UI components tested include:
-
-- Navbar
-- Dashboard components
-- Audit result cards
-- Buttons and forms
-- Loading states
-
----
-
-# Responsive Design Testing
-
-The platform is tested across:
-
-- Desktop devices
-- Tablets
-- Mobile devices
-
----
-
-# Backend Testing
-
-Backend testing validates:
-
-- API routes
-- Data fetching
-- Supabase integration
-- Error handling
-- Async workflows
-
----
-
-# API Route Testing
-
-Main API workflows tested:
-
-| API Route | Purpose |
-|-----------|---------|
-| `/api/share` | Shareable reports |
-| `/api/audit` | Audit processing |
-| `/api/dashboard` | Dashboard data |
-
----
-
-# Database Testing
-
-Supabase-related testing includes:
-
-- Database connectivity
-- Query execution
-- Data validation
-- Insert and retrieval workflows
-
----
-
-# Authentication Testing
-
-Authentication workflows tested:
-
-- Session validation
-- Protected route access
-- Unauthorized request handling
-
----
-
-# Build Testing
-
-Production build testing includes:
+## How to Run Tests
 
 ```bash
-npm run build
+npm test
+# or
+npx vitest run
 ```
 
-### Validation Goals
-
-- Ensure successful compilation
-- Detect type errors
-- Validate route generation
-- Prevent deployment failures
+All tests use Vitest. No server required — tests run against the pure logic layer only.
 
 ---
 
-# ESLint Testing
+## Test Files
 
-Linting ensures:
+### 1. `tests/audit-engine.test.ts`
+**What it covers:** Core audit engine logic — the most critical file in the codebase.
 
-- Code quality
-- Consistent formatting
-- Type-safe practices
+| Test | Description |
+|---|---|
+| Cursor Business downgrade for ≤2 seats | Verifies rule fires and saves $40/mo (2 seats × $20 difference) |
+| Claude Max 5x → Team savings for multi-seat | Verifies $70/seat/mo savings when seats > 1 |
+| API credits trigger at $200+ spend | Verifies credits action fires for Anthropic/OpenAI API spend ≥ $200 |
+| Keep recommendation for optimal plan | Verifies no false positives for correctly-sized plans |
+| Tier derivation — optimal | savingsPercentage = 0 → tier = "optimal" |
+| Tier derivation — high | savingsPercentage ≥ 35 → tier = "high" |
+| Annual savings = monthly × 12 | Data integrity check |
+| Total spend calculation | Sum of all tool monthlySpend values |
 
-## Command
-
-```bash
-npm run lint
-```
-
----
-
-# TypeScript Validation
-
-TypeScript testing verifies:
-
-- Interface correctness
-- Async handling
-- Route parameter typing
-- Component prop validation
+**How to run:** `npx vitest run tests/audit-engine.test.ts`
 
 ---
 
-# Performance Testing
+### 2. `tests/pricing.test.ts`
+**What it covers:** Pricing data lookups and overpay detection.
 
-Performance testing areas include:
+| Test | Description |
+|---|---|
+| Correct price lookup for Cursor Pro | getExpectedSpend returns $20 × seats |
+| Overpay detection | isOverpaying returns true when actual > expected × 1.05 |
+| Expected spend calculation for multi-seat | Seat count multiplied correctly |
+| Plan name resolution | getPlanName returns human-readable name |
+| Unknown tool returns undefined | Graceful handling of invalid toolId |
 
-- Page load speed
-- API response time
-- Dashboard rendering
-- Database query efficiency
-
----
-
-# Core Web Vitals
-
-Performance metrics considered:
-
-- Largest Contentful Paint (LCP)
-- First Input Delay (FID)
-- Cumulative Layout Shift (CLS)
+**How to run:** `npx vitest run tests/pricing.test.ts`
 
 ---
 
-# Error Handling Tests
+### 3. `tests/recommendation.test.ts`
+**What it covers:** Recommendation rule table logic.
 
-The platform validates handling for:
+| Test | Description |
+|---|---|
+| Rule fires for matching condition | Condition function returns true for correct inputs |
+| Rule does not fire when condition false | No false positive on non-matching inputs |
+| Savings formula returns non-negative | No negative savings ever returned |
+| Reason string is non-empty | Every rule has a reason |
+| Credits action fires for high API spend | $200+ API spend triggers credits recommendation |
 
-- Missing routes
-- Invalid audit IDs
-- Database failures
-- Empty responses
-- Build-time failures
-
----
-
-# Manual Testing Workflow
-
-```text
-Start Development Server
-          ↓
-Test Navigation
-          ↓
-Submit Audit Data
-          ↓
-Validate Dashboard Output
-          ↓
-Check API Responses
-          ↓
-Run Build & Lint
-          ↓
-Deploy Verification
-```
+**How to run:** `npx vitest run tests/recommendation.test.ts`
 
 ---
 
-# Deployment Testing
+### 4. `tests/validation.test.ts`
+**What it covers:** Zod schema validation — guards against bad API input.
 
-Deployment validation includes:
+| Test | Description |
+|---|---|
+| Valid input passes AuditInputSchema | Full valid payload accepted |
+| Empty tools array rejected | min(1) constraint enforced |
+| Invalid toolId rejected | Enum constraint on toolId enforced |
+| Negative monthlySpend rejected | min(0) constraint enforced |
+| Honeypot field with content rejected | Bot protection works |
 
-- Successful Vercel builds
-- Environment variable setup
-- Production routing
-- Supabase connectivity
-
----
-
-# Environment Testing
-
-Environment variables verified:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL
-NEXT_PUBLIC_SUPABASE_ANON_KEY
-```
+**How to run:** `npx vitest run tests/validation.test.ts`
 
 ---
 
-# Browser Testing
+### 5. `tests/api.test.ts`
+**What it covers:** API-layer logic (rate limiter + audit engine integration).
 
-Browsers tested:
+| Test | Description |
+|---|---|
+| Rate limiter allows first N requests | checkRateLimit returns allowed: true within limit |
+| Rate limiter blocks after limit | checkRateLimit returns allowed: false when exceeded |
+| Full audit returns correct shape | Result has id, recommendations, totalMonthlySavings, tier |
+| Schema rejects missing fields | Missing teamSize → validation failure |
+| Savings are non-negative | No audit returns negative totalMonthlySavings |
 
-- Google Chrome
-- Microsoft Edge
-- Firefox
-
----
-
-# Security Testing
-
-Basic security validation includes:
-
-- Protected environment variables
-- API access control
-- Input validation
-- Route protection
+**How to run:** `npx vitest run tests/api.test.ts`
 
 ---
 
-# Future Automated Testing Plans
+## Total: 28 tests across 5 files
 
-Potential future improvements:
-
-- Jest integration
-- Playwright testing
-- Cypress E2E testing
-- CI/CD test pipelines
+All tests pass with `npm test`. CI runs them on every push to main via `.github/workflows/ci.yml`.
 
 ---
 
-# CI/CD Validation Goals
+## What the Tests Don't Cover
 
-Future automated workflows may include:
+- UI components (would require jsdom setup + React Testing Library — out of scope for this week)
+- Supabase integration (requires live DB — mocked at the service layer)
+- Resend email sending (mocked — can't send real emails in CI)
+- Anthropic API (mocked — tests the fallback path, not the live API call)
 
-- Build verification
-- Pull request checks
-- Lint validation
-- Automated deployment testing
-
----
-
-# Testing Philosophy
-
-SpendLens AI follows a testing approach focused on:
-
-- Stability
-- Maintainability
-- Scalability
-- User experience
-- Deployment reliability
+The audit engine, pricing logic, recommendation rules, and validation are fully tested. These are the parts where bugs would cause incorrect financial recommendations — the highest-risk code in the system.
 
 ---
 
-# Final Testing Checklist
+## Author
 
-## Before Deployment
-
-- [x] Build passes successfully
-- [x] ESLint passes successfully
-- [x] Environment variables configured
-- [x] GitHub repository updated
-- [x] Responsive UI verified
-- [x] API routes validated
+**Sahil Singh**  
+GitHub: [@sahilsingh78](https://github.com/sahilsingh78)  
+Submission for: Credex Web Dev Intern — Round 1, May 2026
 
 ---
 
-# Repository
+## License
 
-GitHub Repository:
+MIT License
 
-[SpendLens AI Repository](https://github.com/sahilsingh78/SpendLens-AI?utm_source=chatgpt.com)
+Copyright (c) 2026 Sahil Singh
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ---
 
-# Author
-
-Sahil
+*Pricing data verified May 2026. SpendLens is a free tool by [Credex](https://credex.rocks) — discounted AI credits for startups.*

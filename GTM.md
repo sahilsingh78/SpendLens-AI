@@ -1,309 +1,83 @@
-# SpendLens AI Go-To-Market (GTM) Strategy
+# GTM.md
 
-## Overview
+## Exact Target User
 
-This document outlines the Go-To-Market (GTM) strategy for SpendLens AI, including target audience, acquisition channels, positioning, monetization plans, and scaling strategies.
+Not "startups." The exact user is:
 
-SpendLens AI is positioned as an AI-powered financial audit and expense analysis platform focused on helping users gain intelligent insights into spending behavior.
+**A CTO or engineering lead at a 5–30 person seed or Series A startup, paying for 3+ AI tools across their team, who has never formally audited their AI spend.**
 
----
+More specifically: they're paying for Cursor Business for their 4 engineers ($160/mo), ChatGPT Team for the whole company ($300/mo), and GitHub Copilot Business ($76/mo) — $536/month total — because that's what they set up 8 months ago and nobody has revisited it.
 
-# Product Vision
+They are not a CFO. They are not tracking this in a spreadsheet. They approved these tools because they wanted their team to move fast, and now they're in a Series A pitch where the investor asks "what's your monthly burn?" and they have to pull up 6 different billing dashboards.
 
-SpendLens AI aims to simplify financial analysis using:
-
-- AI-powered auditing
-- Expense analytics
-- Smart financial insights
-- Automated reporting
-- Cloud-native infrastructure
+This person Googles: "cursor vs github copilot 2026", "claude team plan vs pro", "is chatgpt team worth it for small startup", "ai tools costs startup". They scroll r/ExperiencedDevs, r/SideProject, Hacker News Show HN, and they're in 2-3 Slack communities for founders (Indie Hackers, On Deck, their accelerator's Slack).
 
 ---
 
-# Target Audience
+## First 100 Users in 30 Days, $0 Budget
 
-## Primary Users
+**Week 1 — Hacker News Show HN:**
+Submit "Show HN: Free AI spend audit for startups — find out if you're overpaying for Cursor/Claude/Copilot." Post on a Tuesday or Wednesday morning US time (peak HN traffic). The title is specific and immediately useful to the HN audience. A good Show HN gets 50–200 upvotes and 2,000–8,000 unique visitors in 24 hours. Target: 40–80 audit completions from this alone.
 
-### Individuals
-Users who want:
-- Personal expense tracking
-- Financial insights
-- Spending analysis
+**Week 1 — r/ExperiencedDevs + r/SideProject:**
+Post the tool with a genuine framing: "I built a 2-minute audit tool that tells you if you're on the right AI plans. Cursor Business for 2 people is overkill — that's $40/mo saved instantly." Real numbers in the post, not vague claims. These subreddits have 400k+ members who are exactly the target user. Don't post the same thing to both — write separate posts for each community.
 
-### Freelancers
-Users who need:
-- Expense organization
-- Tax-ready summaries
-- Audit reports
+**Week 2 — Cold DM founders on X:**
+Search X for people who have tweeted about Cursor, Claude Pro, or ChatGPT Team in the last 30 days. 50 targeted DMs: "Hey, I built a free tool that audits AI tool spend — took me 2 min to find I was overpaying $80/mo. Want to try it?" Conversion rate on targeted DMs is low (~5%) but the 2-3 responses generate word of mouth.
 
-### Small Businesses
-Businesses seeking:
-- Financial transparency
-- Team expense visibility
-- Budget optimization
+**Week 2 — Indie Hackers community post:**
+Write a genuine post: "I audited my AI tool stack and found $340/month in savings. Here's what I found and the tool I built to check yours." Indie Hackers rewards transparency and specific numbers. This community is highly concentrated with exactly the target user.
+
+**Week 3 — Newsletter mentions:**
+Email 5 developer-focused newsletters (TLDR, Bytes.dev, Cooper Press, JavaScript Weekly, Node Weekly). These newsletters have "reader submissions" sections. The pitch: "Free tool, genuinely useful, no signup required, here's what it found for my own stack." A single mention in TLDR (850k subscribers) could drive 500+ visits.
+
+**Week 4 — Twitter/X thread:**
+Write a thread: "I analyzed 100 AI spend audits. Here's what startups are overpaying for: [data from real audits]." Real aggregate data from completed audits is compelling content that gets shared by founders and VCs. Include the tool link at the end.
 
 ---
 
-# Market Problem
+## The Unfair Distribution Channel
 
-Many users struggle with:
-
-- Manual expense tracking
-- Poor spending visibility
-- Complex financial tools
-- Lack of AI-powered insights
-- Time-consuming analysis
-
-SpendLens AI solves these challenges with automation and intelligent analytics.
+Credex already has a customer base — companies that have bought discounted AI credits. Every one of those customers is a warm referral opportunity. A personal email from the Credex founder to existing customers: "We built a free audit tool. Here's what it found for a similar company." This has 10x higher open and click rates than cold acquisition. No other applicant building this tool has access to an existing customer list.
 
 ---
 
-# Product Positioning
+## Week-1 Traction If This Works
 
-## Core Positioning Statement
-
-> SpendLens AI helps users analyze, audit, and optimize financial spending through AI-powered insights and modern analytics.
-
----
-
-# Competitive Advantages
-
-## Technical Advantages
-
-- Next.js 15 architecture
-- Fast responsive UI
-- Modern cloud deployment
-- Scalable infrastructure
-- AI-driven workflows
-
-## Business Advantages
-
-- Affordable pricing
-- Easy onboarding
-- Clean UX
-- Fast deployment
-- Flexible scalability
+- 150–300 audit completions
+- 40–80 email captures (25–30% capture rate)
+- 8–15 Credex consultation bookings (10–20% of high-savings audits)
+- 2–3 organic social shares that weren't initiated by us
+- 1 HN Show HN on the front page for 4–6 hours
 
 ---
 
-# Go-To-Market Strategy
+## What Scores Poorly and Why I'm Not Doing It
 
-## Phase 1 — Product Validation
-
-### Objectives
-
-- Build MVP
-- Gather feedback
-- Validate market need
-
-### Channels
-
-- GitHub
-- LinkedIn
-- Twitter/X
-- Developer communities
+"Post on Twitter" — not a strategy. "Do SEO" — 6 month lag. "Run ads" — costs money and we said $0. The channels above are specific, executable in 30 days, and match where the exact target user actually is.
 
 ---
 
-# Phase 2 — Early User Acquisition
+## Author
 
-## Organic Marketing
-
-### SEO Content
-
-Topics include:
-- Expense management
-- Financial analytics
-- AI auditing
-- Budget optimization
-
-### Technical Blogging
-
-Publish content about:
-- Next.js architecture
-- Supabase integration
-- AI analytics
-- Financial dashboards
+**Sahil Singh**  
+GitHub: [@sahilsingh78](https://github.com/sahilsingh78)  
+Submission for: Credex Web Dev Intern — Round 1, May 2026
 
 ---
 
-# Social Media Strategy
+## License
 
-## Platforms
+MIT License
 
-- LinkedIn
-- Twitter/X
-- GitHub
-- Reddit
-- Product Hunt
+Copyright (c) 2026 Sahil Singh
 
-## Content Types
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-- Feature demos
-- UI showcases
-- Architecture breakdowns
-- AI workflow clips
-- Deployment guides
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ---
 
-# Product Hunt Launch Strategy
-
-## Launch Goals
-
-- Increase visibility
-- Acquire early adopters
-- Collect feedback
-- Build credibility
-
-## Launch Assets
-
-- Demo video
-- Screenshots
-- Architecture docs
-- README documentation
-
----
-
-# Pricing Strategy
-
-| Plan | Features | Price |
-|------|-----------|-------|
-| Free | Basic audits | ₹0 |
-| Pro | Advanced analytics | ₹499/month |
-| Business | Team features | ₹1999/month |
-| Enterprise | Custom integrations | Custom |
-
----
-
-# Revenue Streams
-
-## Subscription Revenue
-
-Primary recurring revenue source.
-
-## Future Revenue Opportunities
-
-- AI financial advisor
-- Premium reports
-- API access
-- Business analytics
-
----
-
-# Customer Acquisition Channels
-
-## Organic Channels
-
-- SEO
-- GitHub
-- Blog articles
-- Social media
-- Open-source visibility
-
-## Paid Channels
-
-- Google Ads
-- LinkedIn Ads
-- Influencer marketing
-- SaaS listings
-
----
-
-# User Retention Strategy
-
-Retention features include:
-
-- Personalized dashboards
-- AI recommendations
-- Smart notifications
-- Spending insights
-- Exportable reports
-
----
-
-# Metrics & KPIs
-
-## Product Metrics
-
-- Monthly active users
-- Retention rate
-- Audit completion rate
-- Session duration
-
-## Business Metrics
-
-- Customer acquisition cost
-- Monthly recurring revenue
-- Churn rate
-- Conversion rate
-
----
-
-# Expansion Strategy
-
-Future expansion opportunities:
-
-- Mobile application
-- AI chatbot assistant
-- Banking integrations
-- Multi-user collaboration
-- Enterprise dashboards
-
----
-
-# Technical Scaling Strategy
-
-Infrastructure designed for:
-
-- Serverless deployment
-- Edge optimization
-- Efficient rendering
-- Low maintenance overhead
-
----
-
-# Launch Workflow
-
-```text
-Build MVP
-    ↓
-Push to GitHub
-    ↓
-Deploy on Vercel
-    ↓
-Collect User Feedback
-    ↓
-Improve Product
-    ↓
-Launch Marketing Campaigns
-    ↓
-Scale Platform
-```
-
----
-
-# Long-Term Vision
-
-SpendLens AI aims to become a scalable intelligent financial insights platform that combines:
-
-- AI
-- Automation
-- Analytics
-- Cloud infrastructure
-
-to improve financial visibility and decision-making for users worldwide.
-
----
-
-# Repository
-
-GitHub Repository:
-
-[SpendLens AI Repository](https://github.com/sahilsingh78/SpendLens-AI?utm_source=chatgpt.com)
-
----
-
-# Author
-
-Sahil
+*Pricing data verified May 2026. SpendLens is a free tool by [Credex](https://credex.rocks) — discounted AI credits for startups.*

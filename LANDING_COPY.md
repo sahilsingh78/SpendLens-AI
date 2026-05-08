@@ -1,203 +1,78 @@
-# SpendLens AI Landing Page Copy
+# LANDING_COPY.md
 
-## Hero Section
+## Hero Headline (≤10 words)
+Your AI stack is probably overcharging you.
 
-### Headline
+## Subheadline (≤25 words)
+Paste what you pay for Cursor, Claude, Copilot, ChatGPT. Get an instant audit with exact savings numbers. Free, 2 minutes.
 
-# Analyze Your Spending With AI-Powered Financial Insights
+## Primary CTA
+Audit my AI spend — free →
 
-### Subheadline
-
-SpendLens AI helps you audit expenses, uncover spending patterns, and generate intelligent financial insights using modern AI-powered analytics.
-
-### CTA Buttons
-
-- Get Started
-- View Demo
-
-### Hero Supporting Text
-
-Track expenses smarter.  
-Understand spending behavior.  
-Make data-driven financial decisions.
+## Secondary CTA
+See how it works ↓
 
 ---
 
-# Trusted Value Proposition
+## Social Proof Block
+*(mocked — indicated as such. Representative of real audit scenarios.)*
 
-## Why SpendLens AI?
+> "Found $340/month in savings in under 2 minutes. Switched Copilot Business → Individual for 3 solo devs and moved off ChatGPT Team. Numbers checked out completely."
+> — **R.M., CTO, 8-person SaaS startup** *(mock)*
 
-- AI-powered financial auditing
-- Smart expense analysis
-- Modern responsive dashboard
-- Fast and scalable performance
-- Secure cloud infrastructure
+> "I didn't realize we were paying for Cursor Business for 2 people. Should've been Pro. $40/month saved, no capability loss."
+> — **A.K., Founder, pre-seed** *(mock)*
 
----
+> "The Anthropic API recommendation was the one I hadn't considered. $800/month in API spend, Credex credits saved us 35%."
+> — **S.P., Engineering Lead, 25-person startup** *(mock)*
 
-# Features Section
-
-## AI Expense Auditing
-
-Automatically analyze spending behavior and generate intelligent audit insights.
-
----
-
-## Smart Financial Analytics
-
-Visualize expense trends and understand where your money goes.
+**Platform stats (representative):**
+- $847 average monthly savings identified
+- 8 AI tools audited: Cursor, Claude, ChatGPT, Copilot, Anthropic API, OpenAI API, Gemini, Windsurf
+- 2 minutes to complete
+- 100% free — email shown only after results
 
 ---
 
-## Shareable Audit Reports
+## FAQ
 
-Generate reports that can be securely shared across devices and teams.
+**Q1: Is this actually free? What's the catch?**
+Fully free. No credit card, no account, no trial period. SpendLens is a lead-generation tool for Credex — a marketplace for discounted AI credits. We make money only if you choose to buy credits through Credex. You get the audit for free regardless.
 
----
+**Q2: How current is the pricing data?**
+Every price is verified from the official vendor pricing page during submission week (May 2026). Cursor, Claude, ChatGPT, Copilot, Gemini, Windsurf — each number has a source URL. AI pricing changes frequently; we note the verification date in PRICING_DATA.md.
 
-## Real-Time Dashboard
+**Q3: What does Credex have to do with this?**
+Credex sources discounted AI infrastructure credits — Anthropic, OpenAI, Cursor — from companies that overforecast usage and need to offload credits. The discount is real: 30–40% below list price, same official API endpoints. SpendLens surfaces Credex as an option only when your audit shows $500+/month in API spend where credits apply. It's never shown for tool subscription recommendations.
 
-Access a fast, responsive dashboard powered by Next.js and Supabase.
+**Q4: Is my data safe? What do you store?**
+The public share URL contains only tool names, plan tiers, and savings numbers — no email, company name, or personal details. Your email is stored server-side only if you choose to receive the report. We use Supabase (hosted Postgres) with row-level security. We don't sell data.
 
----
-
-# Benefits Section
-
-## Save Time
-
-Reduce manual expense tracking and automate financial analysis.
-
----
-
-## Improve Visibility
-
-Gain deeper insights into financial patterns and spending behavior.
+**Q5: Why should I trust the audit numbers?**
+The audit engine uses deterministic rules — not AI-generated math. Every recommendation has a documented reason that cites the specific plan difference, seat count logic, and use-case fit. The pricing data traces to official vendor URLs. A finance person should be able to read the reasoning and agree with it. We don't manufacture savings where none exist — "you're spending efficiently" is a valid and common result.
 
 ---
 
-## Make Better Decisions
+## Author
 
-Use AI-generated insights to optimize budgeting and spending.
-
----
-
-# Product Showcase Copy
-
-## Built for Modern Financial Analysis
-
-SpendLens AI combines modern frontend architecture, cloud infrastructure, and intelligent analytics to create a powerful expense auditing experience.
+**Sahil Singh**  
+GitHub: [@sahilsingh78](https://github.com/sahilsingh78)  
+Submission for: Credex Web Dev Intern — Round 1, May 2026
 
 ---
 
-# Use Cases
+## License
 
-## Individuals
+MIT License
 
-Track and analyze personal spending habits.
+Copyright (c) 2026 Sahil Singh
 
----
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-## Freelancers
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-Organize business expenses and generate audit-ready reports.
-
----
-
-## Small Businesses
-
-Improve financial transparency and monitor team expenses efficiently.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ---
 
-# Statistics Section
-
-## Platform Highlights
-
-- Fast Next.js 15 architecture
-- Secure Supabase backend
-- Modern cloud deployment
-- AI-enhanced analytics
-- Responsive user experience
-
----
-
-# Testimonial Section
-
-## Example Testimonial
-
-> “SpendLens AI helped simplify how I track and analyze expenses. The dashboard is fast, clean, and extremely useful.”
-
----
-
-# CTA Section
-
-## Ready to Understand Your Spending Better?
-
-Start using SpendLens AI today and unlock AI-powered financial insights.
-
-### CTA Buttons
-
-- Start Free
-- Explore Features
-
----
-
-# Footer Copy
-
-## SpendLens AI
-
-AI-powered financial audit and expense analysis platform built for modern users.
-
----
-
-# SEO Meta Title
-
-SpendLens AI — AI-Powered Expense Analysis & Financial Auditing
-
----
-
-# SEO Meta Description
-
-Analyze expenses, generate audit insights, and improve financial visibility using SpendLens AI — a modern AI-powered financial analytics platform.
-
----
-
-# Social Media Copy
-
-## LinkedIn Post
-
-SpendLens AI is a modern AI-powered financial auditing platform built using Next.js 15, TypeScript, Tailwind CSS, and Supabase.
-
-The platform helps users analyze spending patterns, generate audit reports, and gain financial insights through intelligent analytics.
-
-#NextJS #AI #Finance #Supabase #TypeScript #WebDevelopment
-
----
-
-# Twitter/X Post
-
-SpendLens AI 🚀
-
-AI-powered expense analysis and financial auditing platform built with:
-- Next.js 15
-- TypeScript
-- Tailwind CSS
-- Supabase
-
-Modern UI. Smart analytics. Fast performance.
-
-#BuildInPublic #NextJS #AI
-
----
-
-# Repository
-
-GitHub Repository:
-
-[SpendLens AI Repository](https://github.com/sahilsingh78/SpendLens-AI?utm_source=chatgpt.com)
-
----
-
-# Author
-
-Sahil
+*Pricing data verified May 2026. SpendLens is a free tool by [Credex](https://credex.rocks) — discounted AI credits for startups.*

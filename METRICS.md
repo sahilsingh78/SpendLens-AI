@@ -1,328 +1,86 @@
-# SpendLens AI Metrics
+# METRICS.md
 
-## Overview
+## North Star Metric
 
-This document defines the key product, technical, operational, and business metrics used to measure the growth, performance, scalability, and success of SpendLens AI.
+**Qualified leads generated per week** — defined as email captures from audits showing ≥$200/month in savings.
 
-SpendLens AI is an AI-powered financial audit and expense analysis platform designed for intelligent spending insights and modern financial analytics.
+### Why this and not something else:
 
----
-
-# Product Metrics
-
-## Monthly Active Users (MAU)
-
-Tracks the number of unique users interacting with the platform monthly.
-
-### Importance
-
-- Measures platform growth
-- Indicates user engagement
-- Helps estimate scalability needs
+- **Not "audits completed"** — audits are free and easy to game. Someone can run 10 audits with fake data. Completion alone doesn't indicate product value delivered or business outcome.
+- **Not "emails captured"** — emails from users who found $5 in savings have near-zero conversion value to Credex. Unqualified leads are noise.
+- **Not "Credex consultations booked"** — this is the right ultimate metric for Credex revenue, but it's too far downstream to be actionable on a week-to-week basis. It also depends on the Credex sales team, which is outside the product's control.
+- **Qualified leads (≥$200/mo savings, email captured)** — this is the metric that directly predicts Credex revenue and is entirely within the product's control. Every improvement to the form, the audit logic, or the results page should move this number.
 
 ---
 
-# Daily Active Users (DAU)
+## 3 Input Metrics That Drive the North Star
 
-Tracks the number of active users per day.
+**1. Audit completion rate** (form starts → audit submitted)
+Current target: >65%. If this drops below 50%, the form is too long or confusing. This is the biggest drop-off point. Instrument with a `form_started` event and an `audit_submitted` event, track the ratio weekly.
 
-### Importance
+**2. High-savings audit rate** (audits completed → audits showing ≥$200 savings)
+Current estimate: 30–35% of audits. If this is lower, the recommendation engine isn't finding real savings — either the rules are too conservative or users are already on optimal plans. If higher, the engine may be over-recommending. This metric validates the audit quality.
 
-- Measures retention
-- Tracks recurring engagement
-- Identifies usage trends
-
----
-
-# User Retention Rate
-
-Measures how many users return after their first interaction.
-
-## Formula
-
-```text
-Retention Rate = Returning Users / Total Users × 100
-```
-
-### Goal
-
-Maintain strong long-term engagement and recurring platform usage.
+**3. Qualified lead capture rate** (high-savings audits → email captured)
+Target: >35%. If a user sees $500/month in savings and doesn't give us their email, something is wrong with the lead capture UX or trust signal. Test: move the email form above the full breakdown? Test: make the Credex CTA more specific?
 
 ---
 
-# Audit Completion Rate
+## What to Instrument First
 
-Measures how many users successfully complete financial audits.
+In priority order:
 
-## Formula
+1. `audit_started` — user clicks "Get my free audit" (measures intent)
+2. `audit_completed` — successful audit API response returned (measures conversion)
+3. `savings_tier` — which tier (optimal/low/mid/high) with the savings amount (measures engine quality)
+4. `lead_captured` — email submitted successfully (measures monetization funnel)
+5. `share_link_copied` — user copies the shareable URL (measures viral loop)
+6. `credex_cta_clicked` — user clicks the Credex consultation link (measures revenue intent)
 
-```text
-Completed Audits / Started Audits × 100
-```
+All events should include: audit ID, savings tier, total monthly savings bucket ($0, $1-99, $100-499, $500+), tool count, team size bucket.
 
-### Importance
-
-- Evaluates UX quality
-- Identifies friction points
-- Measures feature effectiveness
-
----
-
-# Average Session Duration
-
-Tracks how long users remain active during sessions.
-
-### Importance
-
-- Measures engagement quality
-- Indicates dashboard usefulness
-- Helps optimize user experience
+Use PostHog (free tier, self-hostable) or Plausible. Avoid Google Analytics for a B2B tool — founders care about privacy.
 
 ---
 
-# Technical Metrics
+## What Number Triggers a Pivot Decision
 
-## Build Performance
+**If qualified lead capture rate drops below 15% for 2 consecutive weeks** — this means users are completing audits, seeing savings, and still not giving us their email. The product has a trust or UX problem. Pivot decision: redesign lead capture flow, consider removing email gate entirely and relying on Credex CTA click as the conversion event.
 
-Tracks:
+**If high-savings audit rate drops below 20%** — the recommendation engine is finding savings in too few audits. Either the user base has shifted (already-optimized teams), or the rules need expanding. Pivot: add more tools, add API usage-based recommendations, add benchmark comparison as a value-add for "optimal" cases.
 
-- Build times
-- Deployment success
-- CI/CD stability
-
-### Goal
-
-Maintain fast optimized production builds.
+**If audit completion rate drops below 40%** — the form is the problem. Pivot: simplify to 3 fields (tool, plan, monthly spend), remove seats and use case, add them as optional after the first result.
 
 ---
 
-# API Response Time
+## Metrics This Tool Should NOT Track
 
-Measures the average response speed of API routes.
-
-### Importance
-
-- Improves UX
-- Reduces latency
-- Optimizes backend efficiency
+- **DAU/MAU** — this is a quarterly-use tool. Daily active users is meaningless. A founder audits once, maybe again in 6 months when they hire 3 people.
+- **Session duration** — longer sessions might mean confusion, not engagement.
+- **Page views** — vanity metric. One user refreshing the results page 10 times looks identical to 10 users.
 
 ---
 
-# Database Query Performance
+## Author
 
-Tracks:
-
-- Query execution time
-- Supabase response efficiency
-- Read/write optimization
+**Sahil Singh**  
+GitHub: [@sahilsingh78](https://github.com/sahilsingh78)  
+Submission for: Credex Web Dev Intern — Round 1, May 2026
 
 ---
 
-# Frontend Performance
+## License
 
-## Core Web Vitals
+MIT License
 
-### Largest Contentful Paint (LCP)
+Copyright (c) 2026 Sahil Singh
 
-Measures page load speed.
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-### First Input Delay (FID)
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-Measures responsiveness.
-
-### Cumulative Layout Shift (CLS)
-
-Measures UI stability.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ---
 
-# Error Metrics
-
-## Error Rate
-
-Tracks frontend and backend errors.
-
-### Goal
-
-Maintain low crash and failure rates.
-
----
-
-# Authentication Metrics
-
-Tracks:
-
-- Login success rate
-- Authentication failures
-- Session expiration frequency
-
----
-
-# Infrastructure Metrics
-
-## Deployment Metrics
-
-Tracks:
-
-- Vercel deployment success
-- Build stability
-- Production uptime
-
----
-
-# Scalability Metrics
-
-Measures:
-
-- Concurrent users
-- Database load
-- API scalability
-- Storage usage
-
----
-
-# Business Metrics
-
-## Conversion Rate
-
-Tracks how many free users become premium users.
-
-## Formula
-
-```text
-Premium Users / Total Users × 100
-```
-
----
-
-# Monthly Recurring Revenue (MRR)
-
-Measures subscription-based recurring income.
-
----
-
-# Customer Acquisition Cost (CAC)
-
-Measures the average cost to acquire a user.
-
-## Formula
-
-```text
-Marketing Spend / New Users
-```
-
----
-
-# Churn Rate
-
-Measures the percentage of users who stop using the platform.
-
-## Formula
-
-```text
-Lost Users / Total Users × 100
-```
-
----
-
-# Engagement Metrics
-
-## Feature Usage Tracking
-
-Tracks:
-
-- Dashboard interactions
-- Audit generation frequency
-- Share feature usage
-- Analytics interactions
-
----
-
-# AI Metrics
-
-## Audit Accuracy
-
-Measures the relevance and effectiveness of AI-generated insights.
-
----
-
-# AI Recommendation Engagement
-
-Tracks how users interact with AI-generated recommendations.
-
----
-
-# Security Metrics
-
-Tracks:
-
-- Failed login attempts
-- API abuse detection
-- Unauthorized access attempts
-- Security incident frequency
-
----
-
-# Monitoring Tools
-
-Potential monitoring stack:
-
-- Vercel Analytics
-- Supabase Monitoring
-- Google Analytics
-- Sentry
-- Lighthouse
-
----
-
-# KPI Dashboard Goals
-
-SpendLens AI aims to achieve:
-
-- High retention
-- Low response time
-- Strong engagement
-- Stable infrastructure
-- Sustainable growth
-
----
-
-# Long-Term Success Indicators
-
-Key indicators of platform success:
-
-- Increasing active users
-- Stable recurring revenue
-- High audit completion rate
-- Low churn
-- Strong product engagement
-
----
-
-# Metrics Workflow
-
-```text
-User Activity
-      ↓
-Analytics Collection
-      ↓
-Performance Monitoring
-      ↓
-Product Optimization
-      ↓
-Business Growth
-```
-
----
-
-# Repository
-
-GitHub Repository:
-
-[SpendLens AI Repository](https://github.com/sahilsingh78/SpendLens-AI?utm_source=chatgpt.com)
-
----
-
-# Author
-
-Sahil
+*Pricing data verified May 2026. SpendLens is a free tool by [Credex](https://credex.rocks) — discounted AI credits for startups.*
