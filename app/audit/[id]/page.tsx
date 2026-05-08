@@ -16,32 +16,37 @@ interface AuditPageProps {
 export default async function AuditPage({
   params,
 }: AuditPageProps) {
-  const { id } = await params;
 
-  if (!id) {
-    notFound();
-  }
+  const { id } =
+    await params;
 
   try {
-    const audit = await getAudit(id);
+
+    const audit =
+      await getAudit(id);
 
     return (
-      <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] overflow-x-hidden">
-        {/* Background */}
-        <div className="fixed inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-[-220px] right-[-180px] w-[520px] h-[520px] rounded-full bg-[var(--accent)] opacity-[0.04] blur-3xl" />
-
-          <div className="absolute bottom-[-220px] left-[-180px] w-[520px] h-[520px] rounded-full bg-blue-500 opacity-[0.03] blur-3xl" />
-        </div>
+      <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
 
         <Navbar />
 
-        <AuditResultsClient audit={audit} />
+        <AuditResultsClient
+          audit={audit}
+        />
 
         <Footer />
+
       </div>
     );
-  } catch {
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load audit:",
+      error
+    );
+
     notFound();
+
   }
 }
