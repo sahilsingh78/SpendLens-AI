@@ -12,23 +12,28 @@
 
 A cold visitor lands on the page, enters what AI tools they pay for (tool, plan, seats, monthly spend), their team size and use case — and gets an instant audit: what to downgrade, what to switch, and the total monthly + annual savings. Email is captured after the result is shown, never before. Every audit gets a shareable public URL with proper Open Graph image previews.
 
----
-
 ## Screenshots
 
 ### Landing Page
-![Landing Page](image.png)
+![SpendLens Landing Page](./public/images/hero-preview.png)
 
-### Spend Audit Form
-![Spend Audit Form](image-1.png)
+> Hero section — headline, CTA, stats row, social proof cards
+
+---
 
 ### Audit Results Dashboard
-![Audit Results](image-2.png)
-![Audit Results Detail](image-3.png)
+![SpendLens Audit Results](./public/images/dashboard-preview.png)
 
-### Shareable Public Report
-![Share Page](image-4.png)
-![OG Preview](image-5.png)
+> Full audit breakdown — savings hero card, AI summary by Claude, 
+> per-tool recommendations with reasoning and savings numbers
+
+---
+
+### Social Share Preview (Open Graph)
+![SpendLens OG Image](./public/images/og-image.png)
+
+> Auto-generated preview shown when audit link is shared on 
+> Twitter/X, LinkedIn, Slack, or iMessage
 
 ---
 
