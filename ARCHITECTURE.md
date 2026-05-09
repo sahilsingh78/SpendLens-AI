@@ -4,32 +4,32 @@
 
 ```mermaid
 flowchart TD
-    A[User visits spendlens.vercel.app] --> B[Landing Page - app/page.tsx]
+    A[User visits SpendLens] --> B[Landing Page]
     B --> C[SpendForm Component]
-    C -->|tool, plan, seats, spend, teamSize, useCase| D[POST /api/audit]
+    C -->|tool, plan, seats, spend| D[POST api/audit]
     D --> E[Zod Validation]
     E -->|invalid| F[422 Error Response]
-    E -->|valid| G[runAuditEngine - lib/audit-engine.ts]
-    G --> H[Match tools against RECOMMENDATION_RULES]
-    H --> I[Compute monthlySavings per tool]
+    E -->|valid| G[runAuditEngine]
+    G --> H[Match against RECOMMENDATION_RULES]
+    H --> I[Compute savings per tool]
     I --> J[Derive tier: optimal / low / mid / high]
-    J --> K[AuditResult object with nanoid ID]
-    K --> L[saveAudit to Supabase - async, non-blocking]
+    J --> K[AuditResult with unique ID]
+    K --> L[saveAudit to Supabase]
     K --> M[Return AuditResult to client]
-    M --> N[Audit Results Page - client renders]
-    N --> O[POST /api/summary - Anthropic API]
+    M --> N[Audit Results Page]
+    N --> O[POST api/summary]
     O -->|success| P[AI Summary paragraph]
     O -->|failure| Q[Templated fallback summary]
-    N --> R[User sees SavingsHero + RecommendationCards]
-    R --> S[User enters email - LeadCaptureForm]
-    S --> T[POST /api/lead]
+    N --> R[SavingsHero + RecommendationCards]
+    R --> S[User enters email]
+    S --> T[POST api/lead]
     T --> U[saveLead to Supabase]
     T --> V[Send email via Resend]
-    R --> W[Share button - unique URL]
-    W --> X[/audit/id - public shareable page]
-    X --> Y[GET /api/share?id=...]
-    Y --> Z[getAudit from Supabase - returns public_data only]
-    X --> AA[opengraph-image.tsx - dynamic OG image]
+    R --> W[Share button]
+    W --> X[Public shareable URL]
+    X --> Y[GET api/share]
+    Y --> Z[getAudit - returns public data only]
+    X --> AA[Dynamic OG image generation]
 ```
 
 ---
@@ -41,14 +41,14 @@ flowchart TD
 2. **POST /api/audit** — request body is validated with Zod (`AuditInputSchema`). Invalid requests get 422. Rate limit is checked (10 requests/IP/hour) — exceeded requests get 429.
 
 3. **runAuditEngine(input)** — pure function in `lib/audit-engine.ts`. For each tool in the input:
-   - Looks up matching rules in `RECOMMENDATION_RULES` (data/recommendations.ts)
+   - Looks up matching rules in `RECOMMENDATION_RULES` (`data/recommendations.ts`)
    - Runs the rule's condition function — `(seats, teamSize, useCase, monthlySpend) => boolean`
    - If a rule fires: computes savings via the rule's formula, sets action and reason
    - If no rule fires: checks if user is overpaying vs list price
    - If neither: returns `action: "keep"` with a reason
    - Aggregates total savings, computes `savingsPercentage`, derives `tier`
 
-4. **Supabase write** — `saveAudit()` writes two copies: `data` (full audit including input) and `public_data` (stripped of email, company — safe for public URLs). Write is fire-and-forget — doesn't block the API response.
+4. **Supabase write** — `saveAudit()` writes two copies: `data` (full audit including input) and `public_data` (stripped of email, company — safe for public URLs). Write is blocking — API waits to ensure audit exists before client navigates to results page.
 
 5. **Client renders results** — React state updates, results page animates in. `AIInsightCard` fetches `/api/summary` in the background.
 
@@ -60,45 +60,35 @@ flowchart TD
 
 ## Why This Stack
 
-**Next.js 14 (App Router)**
-Single framework handles: React UI, API routes, server components, dynamic OG images, SSR for audit result pages. No separate backend needed. Vercel deployment is one `git push`.
-
-**TypeScript**
-The audit engine is financial logic — incorrect types would cause incorrect savings calculations. TypeScript makes the rule table self-documenting and prevents entire classes of bugs.
-
-**Tailwind CSS**
-Rapid iteration on UI without context-switching to CSS files. Dark-mode-only design made the palette trivial to maintain as CSS variables.
-
-**Supabase (Postgres)**
-Two tables, simple inserts and selects. Supabase gives us hosted Postgres, a typed JS client, and a dashboard for viewing leads — all in 10 minutes of setup. No ORM needed at this scale.
-
-**Resend**
-3000 free emails/month. Simple API. Better deliverability than raw SMTP. The React Email-style HTML template renders consistently across clients.
-
-**Anthropic API (claude-3-5-haiku)**
-Haiku is the right model for a 100-word summary — fast, cheap, sufficient quality. Graceful fallback means the page never breaks if the API is down or rate limited.
-
-**Vitest**
-Fast, ESM-native, works with the TypeScript config without extra setup. Better DX than Jest for this stack.
+| Layer | Choice | Reason |
+|---|---|---|
+| Framework | Next.js 14 App Router | UI + API routes + SSR + dynamic OG images — one framework, one deploy |
+| Language | TypeScript | Financial logic needs compile-time type safety — wrong types = wrong savings numbers |
+| Styling | Tailwind CSS | Rapid iteration, dark-mode-only palette trivial to maintain via CSS variables |
+| Database | Supabase (Postgres) | Hosted Postgres + typed JS client + leads dashboard in 10 minutes. Two tables — no ORM needed |
+| Email | Resend | 3000 free emails/month, simple API, better deliverability than raw SMTP |
+| AI | Anthropic claude-3-5-haiku | Fast and cheap for a 100-word summary. Graceful fallback means page never breaks |
+| Testing | Vitest | ESM-native, works with TypeScript path aliases without extra config |
+| Deployment | Vercel | Zero-config Next.js, edge functions, automatic preview deployments |
 
 ---
 
 ## What I'd Change at 10k Audits/Day
 
-**Rate limiting → Redis/Upstash**
-Current in-memory rate limiter resets on cold start and doesn't work across multiple Vercel instances. At scale, replace with Upstash Redis for distributed rate limiting. 10 minutes of work.
+**Rate limiting → Upstash Redis**
+Current in-memory rate limiter resets on cold start and doesn't distribute across multiple Vercel instances. Upstash Redis is a one-day swap — same API, works across all instances.
 
-**Supabase connection pooling → PgBouncer**
-At 10k audits/day (~7 req/minute average, spiky to 50+/minute), Postgres direct connections become a bottleneck. Supabase's built-in PgBouncer connection pooler handles this — enable it in the Supabase dashboard.
+**Supabase → PgBouncer connection pooling**
+At 10k audits/day (~7 req/minute average, spiky to 50+/minute), direct Postgres connections become a bottleneck. Supabase's built-in PgBouncer handles this — enable in the dashboard, no code changes.
 
-**Audit persistence → async queue**
-Currently DB write is fire-and-forget in the API handler. At high volume, failed writes are silently lost. Add a simple queue (Upstash QStash or Vercel Cron) to retry failed writes.
+**Audit persistence → async retry queue**
+Currently the DB write blocks the API response. At high volume, use a queue (Upstash QStash or Inngest) to decouple write from response — respond immediately, write in the background with automatic retries on failure.
 
-**AI summary → edge caching**
-The `/api/summary` route calls Anthropic on every page load. At scale, cache the summary in Supabase alongside the audit — generate once, serve from DB forever. Already partially set up with the `aiSummary` field on `AuditResult`.
+**AI summary → cached in DB**
+The `/api/summary` route calls Anthropic on every page load. At scale, generate the summary once and cache it in the `audits` table alongside the audit. Serve from DB on subsequent loads — already partially set up with the `aiSummary` field.
 
-**Analytics**
-Add PostHog or Plausible to measure: form start → completion rate, audit-to-lead conversion, which tools appear most often, which recommendations are most common. This data improves the recommendation engine over time.
+**Analytics → PostHog**
+Add event tracking: form start rate, form completion rate, audit-to-lead conversion, which tools appear most, which recommendations fire most. This data improves the recommendation engine over time and tells Credex which tools to stock credits for.
 
 ---
 
