@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import "@/styles/animations.css";
 import { APP_NAME, APP_DESCRIPTION, APP_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -30,7 +29,7 @@ export const metadata: Metadata = {
     description: APP_DESCRIPTION,
     images: [
       {
-        url: "/images/og-image.png",
+        url: `${APP_URL}/images/og-image.png`,
         width: 1200,
         height: 630,
         alt: "SpendLens — AI Spend Audit",
@@ -41,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${APP_NAME} — Free AI Spend Audit`,
     description: APP_DESCRIPTION,
-    images: ["/images/og-image.png"],
+    images: [`${APP_URL}/images/og-image.png`],
     creator: "@credexrocks",
   },
   robots: {

@@ -1,5 +1,5 @@
 export const APP_NAME = "SpendLens";
-export const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://spendlens.vercel.app";
+export const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://spend-lens-ai-uah9.vercel.app";
 export const APP_DESCRIPTION =
   "Free AI spend audit for startups. Find out where you're overpaying on Cursor, Claude, ChatGPT, Copilot and more.";
 
