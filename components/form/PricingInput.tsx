@@ -1,3 +1,5 @@
+"use client";
+
 interface PricingInputProps {
   value: number;
   onChange: (value: number) => void;
@@ -22,10 +24,23 @@ export default function PricingInput({
           type="number"
           min={0}
           step={1}
-          value={value}
-          onChange={(e) =>
-            onChange(Number(e.target.value))
-          }
+          value={value === 0 ? "" : value}
+          onChange={(e) => {
+            const raw = e.target.value;
+            if (raw === "") {
+              onChange(0);
+              return;
+            }
+            const parsed = parseFloat(raw);
+            if (!isNaN(parsed) && parsed >= 0) {
+              onChange(parsed);
+            }
+          }}
+          onBlur={(e) => {
+            if (!e.target.value) {
+              onChange(0);
+            }
+          }}
           placeholder="20"
           className="w-full h-[52px] pl-8 pr-4 rounded-xl border border-[var(--border)] bg-[var(--bg)] outline-none focus:border-[var(--accent)] transition-colors"
         />

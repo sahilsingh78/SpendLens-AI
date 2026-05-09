@@ -1,3 +1,5 @@
+"use client";
+
 interface SeatCounterProps {
   value: number;
   onChange: (value: number) => void;
@@ -7,16 +9,6 @@ export default function SeatCounter({
   value,
   onChange,
 }: SeatCounterProps) {
-  function increment() {
-    onChange(value + 1);
-  }
-
-  function decrement() {
-    if (value > 1) {
-      onChange(value - 1);
-    }
-  }
-
   return (
     <div>
       <label className="block text-sm font-medium mb-2">
@@ -24,23 +16,45 @@ export default function SeatCounter({
       </label>
 
       <div className="flex items-center rounded-xl border border-[var(--border)] bg-[var(--bg)] overflow-hidden">
-
         <button
           type="button"
-          onClick={decrement}
+          onClick={() => {
+            if (value > 1) onChange(value - 1);
+          }}
           className="w-12 h-12 text-lg text-[var(--text-muted)] hover:bg-[var(--surface)] transition-colors"
+          aria-label="Decrease seats"
         >
           −
         </button>
 
-        <div className="flex-1 text-center font-semibold">
-          {value}
-        </div>
+        <input
+          type="number"
+          min={1}
+          value={value === 0 ? "" : value}
+          onChange={(e) => {
+            const raw = e.target.value;
+            if (raw === "") {
+              onChange(1);
+              return;
+            }
+            const parsed = parseInt(raw, 10);
+            if (!isNaN(parsed) && parsed >= 1) {
+              onChange(parsed);
+            }
+          }}
+          onBlur={(e) => {
+            if (!e.target.value || parseInt(e.target.value) < 1) {
+              onChange(1);
+            }
+          }}
+          className="flex-1 text-center font-semibold bg-transparent border-none outline-none py-3"
+        />
 
         <button
           type="button"
-          onClick={increment}
+          onClick={() => onChange(value + 1)}
           className="w-12 h-12 text-lg text-[var(--text-muted)] hover:bg-[var(--surface)] transition-colors"
+          aria-label="Increase seats"
         >
           +
         </button>
