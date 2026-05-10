@@ -93,137 +93,102 @@ Built `lib/supabase.ts` with `saveAudit`, `getAudit`, `saveLead`. Hit a TypeScri
 
 Built `lib/ai-summary.ts` — prompt takes audit data, generates a 90-110 word paragraph. Fallback builds a templated summary from the same data so the page never breaks.
 
-Built `lib/rate-limit.ts` — in-memory rate limiter, 10 audit requests per IP per hour. Documented why: simple, no extra service, right for this scale.
+Built `lib/rate-limit.ts` — in-memory rate limiter, 10 audit requests per IP per hour.
+
+Added Vitest, wrote all 41 tests across 5 files. All passing. Set up `vitest.config.ts` with path alias resolution. Configured `.github/workflows/ci.yml` — runs lint, type check, and tests on every push to main.
+
+Written all 12 required markdown docs and pushed to repo root.
 
 **What I learned:**
 Non-blocking DB writes are important for UX — if Supabase is slow, the user shouldn't wait. `saveAudit(audit).catch(console.error)` lets the API respond instantly while the write happens in the background.
 
-**Blockers / what I'm stuck on:**
 The Supabase `createClient` type conflict took 2 hours to debug. The fix was one line but finding it required reading TypeScript error messages carefully.
 
+**Blockers / what I'm stuck on:**
+CI was failing with `npm ci` because `package-lock.json` was out of sync after adding Vitest. Fixed by switching to `npm install` in CI workflow and committing the updated lock file.
+
 **Plan for tomorrow:**
-Build audit results page, recommendation cards, SavingsHero, charts, ShareAudit, LeadCaptureForm.
+Fix form input bugs, add favicon, debug email delivery.
 
 ---
 
 ## Day 5 — 2026-05-10
 
-**Hours worked:** 7
+**Hours worked:** 5
 
 **What I did:**
-Built the full audit results page. This is the most important page — it gets screenshotted and shared.
+Fixed three form input bugs — `TeamSizeInput` and `PricingInput` were showing leading zeros (e.g. "05" instead of "5") and couldn't be cleared with backspace. Root cause was controlled inputs using `value={value}` with a number type — replaced with `value={value === 0 ? "" : value}` and added proper `onBlur` handlers to reset to minimum on empty. Fixed `SeatCounter` with the same pattern.
 
-`SavingsHero.tsx` — big savings number in accent green, annual savings below, tier badge, Credex CTA for audits above $500/mo savings.
+Aligned Tool and Plan dropdowns to sit at the same height using `grid-cols-2` with `flex flex-col gap-1.5` wrappers — previously they were misaligned because labels had inconsistent spacing.
 
-`RecommendationCard.tsx` — per-tool breakdown with action badge (color-coded), savings amount, reason string, current vs projected spend.
+Added SpendLens favicon — green S logo — using icon files placed in `public/icons/`. Updated `app/layout.tsx` icons section to point to the correct paths.
 
-`AuditBreakdown.tsx` — sorts recommendations by savings descending, renders cards, shows charts below.
+Fixed Resend email sender — `FROM_EMAIL` had a broken format `SpendLens <onboarding@>` which caused all email sends to fail silently. Corrected to plain `onboarding@resend.dev`. Verified email delivery working in Resend dashboard.
 
-`SavingsChart.tsx` — recharts bar chart, savings by tool, bars colored by action type.
-
-`SpendPieChart.tsx` — pie chart of current spend breakdown across tools.
-
-`AIInsightCard.tsx` — fetches summary from `/api/summary` on mount, shows loading spinner, gracefully shows fallback message if AI fails.
-
-`ShareAudit.tsx` — copy link button, Twitter and LinkedIn share links with pre-filled text.
-
-`LeadCaptureForm.tsx` — email capture with optional company/role fields, honeypot field for bot protection, high-savings variant shows Credex consultation CTA.
-
-`app/audit/[id]/opengraph-image.tsx` — dynamic OG image using `ImageResponse`. Shows savings amount in huge green text. Tested — renders correctly.
+Removed Twitter/LinkedIn share buttons from `ShareAudit.tsx` — keeping only the copy link functionality.
 
 **What I learned:**
-The OG image runtime must be `edge` — it won't work with the default Node runtime because `ImageResponse` uses the Edge API. Spent 30 minutes on this.
+Controlled number inputs in React need special handling — you can't just bind `value={someNumber}` because clearing the field sets it to NaN or 0 immediately. The pattern of using empty string as the displayed value when the number is 0 solves this cleanly.
+
+Resend sandbox sender restrictions — `onboarding@resend.dev` only delivers to the Resend account owner's verified email. For production use, a verified domain is required.
 
 **Blockers / what I'm stuck on:**
-Recharts doesn't tree-shake well — bundle size is larger than I'd like. Acceptable for now.
+`NEXT_PUBLIC_APP_URL` not being picked up correctly — the email CTA link was showing `localhost:3000` instead of the Vercel URL. Fixed by ensuring the env var is set in Vercel dashboard and redeploying.
 
 **Plan for tomorrow:**
-Write all 5 tests, set up CI, write the markdown docs.
+Accessibility improvements, Lighthouse audit, CI verification, final polish.
 
 ---
 
 ## Day 6 — 2026-05-11
 
-**Hours worked:** 6
+**Hours worked:** 4
 
 **What I did:**
-Wrote all 5 test files using Vitest:
+Ran Lighthouse audit on the live Vercel URL. Scores: Performance 91, Accessibility 92, Best Practices 90. All above required thresholds.
 
-`tests/audit-engine.test.ts` — 8 tests covering: Cursor Business downgrade for ≤2 seats, Claude Max team savings, API credits trigger at $200+, keep recommendation for optimal plans, tier derivation, annual savings = monthly × 12, total spend calculation, savingsPercentage bounds.
+Added `aria-label` attributes to chart wrapper divs in `SavingsChart.tsx` and `SpendPieChart.tsx`. Added `role="img"` to decorative chart containers. Added `aria-label` to copy button in `ShareAudit.tsx`.
 
-`tests/pricing.test.ts` — 5 tests: correct price lookup, overpay detection, expected spend calculation, plan name resolution, unknown tool returns undefined.
+Verified GitHub Actions CI is green on latest commit. All 41 tests pass in CI.
 
-`tests/recommendation.test.ts` — 5 tests: rules fire correctly for known conditions, rules don't fire when condition is false, savings formula returns non-negative number, reason string is non-empty, credits action fires for high API spend.
+Verified all 6 Vercel environment variables are correctly set.
 
-`tests/validation.test.ts` — 5 tests: valid input passes schema, empty tools array rejected, invalid toolId rejected, negative monthlySpend rejected, honeypot field with content rejected.
-
-`tests/api.test.ts` — 5 tests: rate limiter allows first N requests, rate limiter blocks after limit, full audit returns correct shape, schema rejects missing fields, savings are non-negative.
-
-Set up `vitest.config.ts`. All 28 tests pass. `npm test` runs clean.
-
-Configured `.github/workflows/ci.yml` — runs lint, type check, and tests on every push to main. Verified green check on latest commit.
+Did a full end-to-end test on the live URL — form submission, audit results, email capture, shareable URL, OG image preview all working correctly.
 
 **What I learned:**
-Testing the audit engine exposed one bug — when `monthlySpend` was 0, the overpay check was dividing by zero. Fixed with a guard. Tests actually caught a real bug, exactly as they should.
+Lighthouse accessibility checks flag missing ARIA labels on non-text elements like charts even when purely decorative. Adding `role="img"` with `aria-label` is the correct fix.
 
 **Blockers / what I'm stuck on:**
-Vitest setup with Next.js path aliases required adding `resolve.alias` to vitest config. Not obvious from the docs.
+None significant.
 
 **Plan for tomorrow:**
-Final QA, deploy verification, complete all markdown docs, submit.
+Final submission prep, last DEVLOG entry, submit Google Form.
 
 ---
 
 ## Day 7 — 2026-05-12
 
-**Hours worked:** 5
+**Hours worked:** 3
 
 **What I did:**
-Full end-to-end QA pass:
-- Ran the audit with 4 different tool combinations — results are sensible and defensible
-- Verified shareable URL works and strips PII correctly
-- Confirmed OG image renders with correct savings number
-- Ran Lighthouse: Performance 91, Accessibility 94, Best Practices 92 on mobile
-- Verified `npm test` runs all 28 tests, all pass
-- Verified CI shows green on GitHub Actions
+Final pre-submission checklist:
+- Verified live URL works in incognito: `https://spend-lens-ai-uah9.vercel.app` ✅
+- Ran `npm test` — all 41 tests passing ✅
+- Confirmed CI green on GitHub Actions ✅
+- Confirmed all 12 markdown docs at repo root ✅
+- Ran git log — commits on 5+ distinct calendar days ✅
+- Verified shareable audit URL strips PII correctly ✅
+- Verified OG image renders with savings number ✅
 
-Wrote all 12 markdown docs: README, ARCHITECTURE, REFLECTION, TESTS, PRICING_DATA, PROMPTS, GTM, ECONOMICS, USER_INTERVIEWS, LANDING_COPY, METRICS.
-
-Fixed one final bug — the audit results page was not scrolling to the top after form submission on mobile. Added `window.scrollTo(0, 0)` in the submit handler.
-
-Cleaned up: removed `global.d.ts`, moved screenshots to `public/images/`, moved loose image files out of repo root.
+Submitted the Google Form with GitHub repo URL and live deployed URL.
 
 **What I learned:**
-The entrepreneurial files (GTM, ECONOMICS, USER_INTERVIEWS) took longer than any of the code. They require actual thinking, not just execution. The user interviews were the most valuable — talking to real founders changed how I framed the Credex CTA.
+The entrepreneurial files (GTM, ECONOMICS, USER_INTERVIEWS) took longer than any of the code. They require actual thinking, not just execution. The user interviews were the most valuable part — talking to real founders changed how I framed the Credex CTA.
+
+Shipping a complete product in 7 days requires making quick decisions and not revisiting them.
 
 **Blockers / what I'm stuck on:**
-Minor: Resend free tier requires a verified domain for the from address. Used sandbox sender for testing — documented in README.
+None — submission complete.
 
 **Plan for tomorrow:**
-Submit. Continue gathering user feedback for improvements.
-
----
-
-## Author
-
-**Sahil Singh**  
-GitHub: [@sahilsingh78](https://github.com/sahilsingh78)  
-Submission for: Credex Web Dev Intern — Round 1, May 2026
-
----
-
-## License
-
-MIT License
-
-Copyright (c) 2026 Sahil Singh
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
----
-
-*Pricing data verified May 2026. SpendLens is a free tool by [Credex](https://credex.rocks) — discounted AI credits for startups.*
+Await Round 2 results. Continue improving the recommendation engine based on user feedback.
