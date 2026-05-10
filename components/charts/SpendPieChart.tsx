@@ -8,10 +8,10 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import { ToolInput } from "@/lib/types";
+import { ToolEntry } from "@/lib/types";
 
 interface SpendPieChartProps {
-  tools: ToolInput[];
+  tools: ToolEntry[];
 }
 
 const COLORS = [
@@ -23,37 +23,32 @@ const COLORS = [
   "#14b8a6",
 ];
 
-export default function SpendPieChart({
-  tools,
-}: SpendPieChartProps) {
-  const data = tools.map((tool) => ({
-    name: tool.name,
-    value: tool.monthlySpend,
-  }));
+export default function SpendPieChart({ tools }: SpendPieChartProps) {
+  const data = tools
+    .filter((tool) => tool.monthlySpend > 0)
+    .map((tool) => ({
+      name: tool.name,
+      value: tool.monthlySpend,
+    }));
+
+  if (data.length === 0) return null;
 
   return (
     <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
-
       <div className="mb-5">
         <h3
           className="text-sm font-semibold"
-          style={{
-            fontFamily: "Syne, sans-serif",
-          }}
+          style={{ fontFamily: "Syne, sans-serif" }}
         >
           Current spend allocation
         </h3>
-
         <p className="text-xs text-[var(--text-muted)] mt-1">
           Distribution across tools
         </p>
       </div>
 
       <div className="h-72">
-        <ResponsiveContainer
-          width="100%"
-          height="100%"
-        >
+        <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={data}
@@ -66,15 +61,10 @@ export default function SpendPieChart({
               {data.map((_, index) => (
                 <Cell
                   key={index}
-                  fill={
-                    COLORS[
-                      index % COLORS.length
-                    ]
-                  }
+                  fill={COLORS[index % COLORS.length]}
                 />
               ))}
             </Pie>
-
             <Tooltip
               contentStyle={{
                 background: "#111",
@@ -82,6 +72,7 @@ export default function SpendPieChart({
                 borderRadius: "12px",
                 color: "#fff",
               }}
+              formatter={(value: number) => [`$${value}/mo`, ""]}
             />
           </PieChart>
         </ResponsiveContainer>
