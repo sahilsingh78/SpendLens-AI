@@ -53,9 +53,10 @@ export default function SpendPieChart({ tools }: SpendPieChartProps) {
                 background: "#1a1a1a",
                 border: "1px solid #2a2a2a",
                 borderRadius: "12px",
-                color: "#f5f5f5",
                 fontSize: 12,
               }}
+              labelStyle={{ color: "#f5f5f5" }}
+              itemStyle={{ color: "#f5f5f5" }}
               formatter={(value: number) => [`$${value}/mo`, ""]}
             />
             <Legend
