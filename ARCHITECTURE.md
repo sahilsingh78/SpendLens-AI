@@ -89,29 +89,3 @@ The `/api/summary` route calls Anthropic on every page load. At scale, generate 
 
 **Analytics → PostHog**
 Add event tracking: form start rate, form completion rate, audit-to-lead conversion, which tools appear most, which recommendations fire most. This data improves the recommendation engine over time and tells Credex which tools to stock credits for.
-
----
-
-## Author
-
-**Sahil Singh**  
-GitHub: [@sahilsingh78](https://github.com/sahilsingh78)  
-Submission for: Credex Web Dev Intern — Round 1, May 2026
-
----
-
-## License
-
-MIT License
-
-Copyright (c) 2026 Sahil Singh
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
----
-
-*Pricing data verified May 2026. SpendLens is a free tool by [Credex](https://credex.rocks) — discounted AI credits for startups.*

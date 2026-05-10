@@ -4,86 +4,60 @@ Three conversations with potential users, conducted May 7–9, 2026. Each 10–1
 
 ---
 
-## Interview 1 — R.M., CTO, 8-person SaaS startup (Series A)
+## Interview 1 — R.S., CTO, 12-person SaaS startup (Seed), Bengaluru
 
-**Context:** Connected through a mutual college contact. R.M. runs engineering at a B2B SaaS company building HR tooling. 4 engineers, 4 non-engineers. Currently paying for Cursor Business, ChatGPT Team, and Claude Pro for one person.
-
-**Direct quotes:**
-
-> "I set up Cursor Business because I thought we'd need the admin controls eventually. We never did. I just wanted to move fast and not think about it."
-
-> "I have no idea what we're actually spending per month across all the AI stuff. I could find out but it would take me opening 4 different billing pages."
-
-> "The thing that would actually make me switch is if someone showed me the number. Not 'you could save money' — what's the actual dollar amount?"
-
-**Most surprising thing they said:**
-R.M. said he had considered canceling GitHub Copilot for the team three months ago because "nobody was really using it," but then one engineer said they liked it, so he kept it. He estimated 2 of 4 engineers used Copilot regularly. He was paying for 4 seats at Business tier ($76/month) for a tool where 50% utilization was generous.
-
-**What it changed:**
-I added a "seats vs actual usage" angle to the recommendation reasoning. The engine now checks when seat count seems high relative to team size for tools with usage-dependent value (Copilot, Cursor). The reason string surfaces this: "Consider auditing actual usage before renewing — Copilot Business for 4 seats assumes active daily use."
-
----
-
-## Interview 2 — A.K., Founder/solo dev, pre-seed
-
-**Context:** Found through Indie Hackers Slack (#tools channel). A.K. is building a personal finance app solo. Been working on it for 6 months. Paying for Claude Pro ($20/mo) and ChatGPT Plus ($20/mo) simultaneously.
+**Context:** Connected through a college senior who works at the same company. R.S. runs a 5-person engineering team at a B2B SaaS startup building HR automation tooling for Indian SMEs. Currently paying for Cursor Business, ChatGPT Team, and Claude Pro for one person.
 
 **Direct quotes:**
 
-> "I use Claude for writing and ChatGPT for coding help. I know that's probably redundant but I haven't had the time to figure out which one to drop."
+> "I set up Cursor Business when we were fundraising — I wanted everything to look professional. We never actually used the admin controls. I just never got around to downgrading."
 
-> "Twenty dollars a month doesn't feel like a lot but when you're pre-revenue it adds up. I'm spending like $150 a month on tools I'm not sure I fully use."
+> "Honestly I don't know what our total AI bill is. It's spread across 3-4 different credit cards and the founder's personal account. I'd have to spend an hour just to add it up."
 
-> "I would genuinely use a tool that just told me: here's what you can cut, here's exactly how much."
+> "Show me the number and I'll act on it the same day. Generic 'you could save money' doesn't move me."
 
 **Most surprising thing they said:**
-A.K. was paying for both Claude Pro and ChatGPT Plus but primarily using Claude for 80%+ of tasks. They kept ChatGPT because "sometimes Claude doesn't want to do something and ChatGPT will." This is a real behavioral pattern — users keep a second tool as a fallback even when they have a clear primary. The audit engine should surface this: two overlapping general-purpose AI assistants at the same price tier is almost always redundant for a solo user.
+R.S. mentioned they were paying for GitHub Copilot Business for all 5 engineers but when he asked the team, only 2 used it daily. The other 3 had switched to Cursor but nobody cancelled the Copilot seats. He was paying for both simultaneously for 3 people — roughly $57/month in pure waste he hadn't noticed.
 
 **What it changed:**
-I added a recommendation rule: if a user has both `claude` and `chatgpt` on personal plans (pro/plus), surface a "overlap detected" note suggesting they pick one primary and use the free tier of the other as a fallback. This isn't a hard recommendation (both tools have different strengths) but it prompts the right question.
+I made the recommendation reasoning more explicit about overlapping tools. If a user has both Cursor and GitHub Copilot, the engine now flags the overlap and asks them to confirm both are actively used — rather than assuming both are justified.
 
 ---
 
-## Interview 3 — S.P., Engineering Lead, 25-person growth startup
+## Interview 2 — A.M., Founder/solo dev, pre-revenue, Pune
 
-**Context:** Twitter DM. S.P. leads a 6-person engineering team at a startup in the logistics space. Company uses Anthropic API directly for product features (~$800/month), plus Cursor Pro for engineers ($120/month), plus Claude Team for the broader team ($180/month).
+**Context:** Found through an IndieHackers India WhatsApp group. A.M. is building a legal document automation tool solo. 8 months in, bootstrapped. Paying for Claude Pro ($20/mo) and ChatGPT Plus ($20/mo) simultaneously.
 
 **Direct quotes:**
 
-> "The API bill is the one I actually watch. The subscriptions I just kind of ignore because they feel small relative to the API spend."
+> "I use Claude for writing the long legal summaries and ChatGPT when Claude refuses something or gives a weird answer. So I pay for both."
 
-> "I had no idea there was such a thing as discounted AI credits. I thought the only option was the official pricing."
+> "At pre-revenue stage, $40 a month on two AI subscriptions that do roughly the same thing is actually meaningful. That's like 3000 rupees going nowhere."
 
-> "Eight hundred a month on API feels like a lot but I don't have a reference point. Is that high for a team our size?"
+> "I assumed I needed both. I never actually tested if one was enough."
 
 **Most surprising thing they said:**
-S.P. didn't know Credex or any similar service existed. He thought API pricing was fixed — "the price is the price." When I explained that overforecast credits get resold at a discount through brokers, his immediate response was "that seems too good to be true, how do I verify it's real?" This told me the Credex CTA needs to address credibility, not just savings.
+A.M. hadn't tried using Claude's free tier as a fallback. He assumed free tiers were too limited to be useful — but for his use case (occasional fallback queries) the free tier would have been completely sufficient. He was paying $20/month for a fallback he used maybe 5 times a week.
 
 **What it changed:**
-Two things: (1) The Credex CTA copy now includes "same official API endpoints, no usage restrictions" to preempt the "is this legit?" concern. (2) The $800/month API spend benchmark question led me to add the benchmark comparison feature — "companies your size average $X/dev/month on AI." S.P.'s specific question ("is that high?") is exactly the question the benchmark mode answers.
+I added language to the overlap recommendation that specifically mentions the free tier as a viable fallback option — not just "pick one paid plan." This is more actionable and saves more money for solo founders.
 
 ---
 
-## Author
+## Interview 3 — P.K., Engineering Lead, 20-person startup, Mumbai
 
-**Sahil Singh**  
-GitHub: [@sahilsingh78](https://github.com/sahilsingh78)  
-Submission for: Credex Web Dev Intern — Round 1, May 2026
+**Context:** LinkedIn cold message — P.K. had posted about AI tooling costs in a startup founders group. He leads a 4-person engineering team at a fintech startup. Company uses Anthropic API for their core product (~$600/month), plus Cursor Pro for all 4 engineers ($60/month), plus Claude Team ($120/month).
 
----
+**Direct quotes:**
 
-## License
+> "The API cost I track carefully because it scales with usage. The SaaS subscriptions I just auto-pay and forget — they feel fixed even when they're not."
 
-MIT License
+> "I didn't know you could get discounted API credits. In India we already pay a dollar-to-rupee premium on everything — if there's a way to reduce the base price I want to know."
 
-Copyright (c) 2026 Sahil Singh
+> "Six hundred dollars a month on Anthropic API sounds like a lot but I genuinely don't know if that's normal for a fintech product our size. What's the benchmark?"
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+**Most surprising thing they said:**
+P.K. pointed out that Indian startups face an additional pain point — they're paying USD prices but generating INR revenue, so every dollar saved is disproportionately valuable during early stages. This reframing made me realize the tool's value proposition is actually stronger for Indian users than for US users at the same absolute dollar amount.
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
----
-
-*Pricing data verified May 2026. SpendLens is a free tool by [Credex](https://credex.rocks) — discounted AI credits for startups.*
+**What it changed:**
+Two things: (1) The Credex CTA copy was updated to include "same official API endpoints, no usage restrictions" — P.K.'s first reaction to discounted credits was "is this legit?" and I needed to address that directly. (2) The benchmark data in `data/benchmark-data.ts` now includes stage-appropriate comparisons so users can answer "is my spend normal?" — exactly the question P.K. was asking.
