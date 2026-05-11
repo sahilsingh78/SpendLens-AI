@@ -2,41 +2,94 @@
 
 import { UseCase } from "@/lib/types";
 
-const USE_CASES: { value: UseCase; label: string }[] = [
-  { value: "coding", label: "Software Development" },
-  { value: "writing", label: "Writing & Content" },
-  { value: "data", label: "Data Analysis" },
-  { value: "research", label: "Research" },
-  { value: "mixed", label: "Mixed / General" },
+const USE_CASES: {
+  value: UseCase;
+  label: string;
+}[] = [
+  {
+    value: "coding",
+    label: "Software Development",
+  },
+  {
+    value: "writing",
+    label: "Writing & Content",
+  },
+  {
+    value: "data",
+    label: "Data Analysis",
+  },
+  {
+    value: "research",
+    label: "Research",
+  },
+  {
+    value: "mixed",
+    label: "Mixed / General",
+  },
 ];
 
 interface UseCaseSelectProps {
+  id?: string;
+
   value?: UseCase;
-  onChange: (value: UseCase) => void;
+
+  onChange: (
+    value: UseCase
+  ) => void;
 }
 
-export default function UseCaseSelect({ value, onChange }: UseCaseSelectProps) {
+export default function UseCaseSelect({
+  id,
+  value,
+  onChange,
+}: UseCaseSelectProps) {
+
   return (
+
     <div>
-      <label htmlFor="use-case" className="block text-sm font-medium mb-2">
+
+      <label
+        htmlFor={id}
+        className="mb-2 block text-sm font-medium"
+      >
         Primary use case
       </label>
+
       <select
-        id="use-case"
+        id={id}
         value={value ?? ""}
-        onChange={(e) => onChange(e.target.value as UseCase)}
-        className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--bg)] outline-none focus:border-[var(--accent)] transition-colors"
+        onChange={(e) =>
+          onChange(
+            e.target.value as UseCase
+          )
+        }
+        className="w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-4 py-3 outline-none transition-colors focus:border-[var(--accent)]"
       >
-        <option value="">Select use case</option>
+
+        <option value="">
+          Select use case
+        </option>
+
         {USE_CASES.map((uc) => (
-          <option key={uc.value} value={uc.value}>
+
+          <option
+            key={uc.value}
+            value={uc.value}
+          >
             {uc.label}
           </option>
+
         ))}
+
       </select>
-      <p className="text-xs text-[var(--text-dim)] mt-2">
-        Helps generate more accurate recommendations
+
+      <p className="mt-2 text-xs text-[var(--text-dim)]">
+
+        Helps generate more accurate
+        recommendations
+
       </p>
+
     </div>
   );
 }

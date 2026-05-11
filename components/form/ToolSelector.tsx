@@ -36,6 +36,8 @@ const TOOLS = [
 ] as const;
 
 interface ToolSelectorProps {
+  id?: string;
+
   value?: ToolId;
 
   onChange: (
@@ -46,26 +48,32 @@ interface ToolSelectorProps {
 }
 
 export default function ToolSelector({
+  id,
   value,
   onChange,
   disabledIds = [],
 }: ToolSelectorProps) {
 
   return (
-    <div className="flex flex-col h-full">
 
-      <label className="block text-sm font-medium mb-2">
+    <div className="flex h-full flex-col">
+
+      <label
+        htmlFor={id}
+        className="mb-2 block text-sm font-medium"
+      >
         Tool
       </label>
 
       <select
+        id={id}
         value={value ?? ""}
         onChange={(e) =>
           onChange(
             e.target.value as ToolId
           )
         }
-        className="h-14 w-full px-4 rounded-xl border border-[var(--border)] bg-[var(--bg)] outline-none focus:border-[var(--accent)] transition-colors"
+        className="h-14 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-4 outline-none transition-colors focus:border-[var(--accent)]"
       >
 
         <option value="">
@@ -73,6 +81,7 @@ export default function ToolSelector({
         </option>
 
         {TOOLS.map((tool) => (
+
           <option
             key={tool.id}
             value={tool.id}
@@ -82,11 +91,12 @@ export default function ToolSelector({
           >
             {tool.label}
           </option>
+
         ))}
 
       </select>
 
-      <p className="text-xs text-[var(--text-dim)] mt-2 leading-5">
+      <p className="mt-2 text-xs leading-5 text-[var(--text-dim)]">
 
         Choose the AI tool currently
         used by your team

@@ -74,7 +74,8 @@ export default function ShareAudit({
 
     window.open(
       shareUrl,
-      "_blank"
+      "_blank",
+      "noopener,noreferrer"
     );
   }
 
@@ -87,7 +88,8 @@ export default function ShareAudit({
 
     window.open(
       shareUrl,
-      "_blank"
+      "_blank",
+      "noopener,noreferrer"
     );
   }
 
@@ -118,6 +120,7 @@ export default function ShareAudit({
         </div>
 
         <button
+          type="button"
           onClick={copyLink}
           className="shrink-0 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-4 py-2 text-xs font-medium transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
           aria-label="Copy audit link"
@@ -134,7 +137,9 @@ export default function ShareAudit({
       <div className="mt-4 flex flex-wrap gap-3">
 
         <button
+          type="button"
           onClick={shareOnX}
+          aria-label="Share audit on X"
           className="flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-4 py-2 text-xs font-medium transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
         >
           <FaXTwitter size={14} />
@@ -142,7 +147,9 @@ export default function ShareAudit({
         </button>
 
         <button
+          type="button"
           onClick={shareOnLinkedIn}
+          aria-label="Share audit on LinkedIn"
           className="flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-4 py-2 text-xs font-medium transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
         >
           <Linkedin size={14} />
