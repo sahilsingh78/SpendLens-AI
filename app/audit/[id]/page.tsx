@@ -9,16 +9,16 @@ import AuditResultsClient from "./AuditResultsClient";
 import { getAudit } from "@/lib/supabase";
 
 interface AuditPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({
   params,
 }: AuditPageProps): Promise<Metadata> {
 
-  const { id } = params;
+  const { id } = await params;
 
   try {
 
@@ -118,7 +118,7 @@ export default async function AuditPage({
   params,
 }: AuditPageProps) {
 
-  const { id } = params;
+  const { id } = await params;
 
   try {
 

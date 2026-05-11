@@ -16,9 +16,9 @@ export const contentType =
   "image/png";
 
 interface OpenGraphImageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function OpenGraphImage({
@@ -27,8 +27,11 @@ export default async function OpenGraphImage({
 
   try {
 
+    const { id } =
+      await params;
+
     const audit =
-      await getAudit(params.id);
+      await getAudit(id);
 
     const monthlySavings =
       audit.totalMonthlySavings || 0;
@@ -241,7 +244,7 @@ export default async function OpenGraphImage({
                 fontSize: "24px",
               }}
             >
-              spendlens.vercel.app
+              spend-lens-ai.vercel.app
             </div>
 
           </div>
