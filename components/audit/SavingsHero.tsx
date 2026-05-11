@@ -1,25 +1,31 @@
 "use client";
 
+import Link from "next/link";
 import { ShareableAudit } from "@/lib/types";
-
-import {
-  formatCurrencyFull,
-  getTierLabel,
-  getTierColor,
-} from "@/lib/helpers";
-
-import {
-  CREDEX_CONSULT_URL,
-} from "@/lib/constants";
+import { formatCurrencyFull, getTierLabel } from "@/lib/helpers";
+import { CREDEX_CONSULT_URL } from "@/lib/constants";
 
 interface SavingsHeroProps {
   audit: ShareableAudit;
 }
 
-export default function SavingsHero({
-  audit,
-}: SavingsHeroProps) {
+// Always use green accent — blue was confusing users
+function getTierColor(tier: string): string {
+  switch (tier) {
+    case "high":
+      return "#00ff88";
+    case "mid":
+      return "#00ff88";
+    case "low":
+      return "#00ff88";
+    case "optimal":
+      return "#00ff88";
+    default:
+      return "#00ff88";
+  }
+}
 
+export default function SavingsHero({ audit }: SavingsHeroProps) {
   const {
     totalMonthlySavings,
     totalAnnualSavings,
@@ -29,165 +35,135 @@ export default function SavingsHero({
     toolCount,
   } = audit;
 
-  const isOptimal =
-    totalMonthlySavings === 0;
-
-  const isHigh =
-    totalMonthlySavings >= 500;
-
-  const tierColor =
-    getTierColor(tier);
+  const isOptimal = totalMonthlySavings === 0;
+  const isHigh = totalMonthlySavings >= 500;
+  const tierColor = getTierColor(tier);
 
   return (
     <div
       className="relative overflow-hidden rounded-2xl border p-8 text-center"
       style={{
-        borderColor:
-          tierColor + "40",
-
-        background:
-          `linear-gradient(135deg, ${tierColor}08 0%, transparent 60%)`,
+        borderColor: tierColor + "40",
+        background: `linear-gradient(135deg, ${tierColor}08 0%, transparent 60%)`,
       }}
     >
-
       {/* Glow */}
-
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 blur-[60px] pointer-events-none"
-        style={{
-          background:
-            tierColor + "20",
-        }}
+        style={{ background: tierColor + "20" }}
       />
 
       <div className="relative">
-
         {/* Tier badge */}
-
         <div
           className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-mono mb-6"
           style={{
-            borderColor:
-              tierColor + "40",
-
+            borderColor: tierColor + "40",
             color: tierColor,
           }}
         >
-
           <span
-            className="w-1.5 h-1.5 rounded-full"
-            style={{
-              background:
-                tierColor,
-            }}
+            className="w-1.5 h-1.5 rounded-full animate-pulse"
+            style={{ background: tierColor }}
           />
-
           {getTierLabel(tier)}
-
         </div>
 
         {isOptimal ? (
           <>
-
-            <div className="text-5xl mb-3">
-              ✅
-            </div>
-
+            <div className="text-5xl mb-3">✅</div>
             <h2
               className="text-3xl font-black mb-2"
-              style={{
-                fontFamily:
-                  "Syne, sans-serif",
-              }}
+              style={{ fontFamily: "Syne, sans-serif" }}
             >
               You&apos;re spending efficiently
             </h2>
-
             <p className="text-[var(--text-muted)] text-sm">
-
-              {formatCurrencyFull(
-                totalMonthlySpend
-              )}
-
-              /month · No major savings identified
-
+              {formatCurrencyFull(totalMonthlySpend)}/month · No major savings
+              identified
             </p>
-
           </>
         ) : (
           <>
-
             <p className="text-sm text-[var(--text-muted)] mb-1">
               Monthly savings identified
             </p>
 
+            {/* Big savings number — always green */}
             <div
-              className="text-6xl md:text-7xl font-black mb-2 animate-count-up"
+              className="text-6xl md:text-8xl font-black mb-2 animate-count-up"
               style={{
-                fontFamily:
-                  "Syne, sans-serif",
-
-                color:
-                  tierColor,
+                fontFamily: "Syne, sans-serif",
+                color: "#00ff88",
               }}
             >
-
-              {formatCurrencyFull(
-                totalMonthlySavings
-              )}
-
+              {formatCurrencyFull(totalMonthlySavings)}
               <span className="text-2xl text-[var(--text-dim)] font-normal">
                 /mo
               </span>
-
             </div>
 
             <p className="text-[var(--text-muted)] text-sm mb-1">
-
-              {formatCurrencyFull(
-                totalAnnualSavings
-              )}
-
-              /year · {savingsPercentage}% of current spend
-
+              {formatCurrencyFull(totalAnnualSavings)}/year ·{" "}
+              {savingsPercentage}% of current spend
             </p>
 
             <p className="text-xs text-[var(--text-dim)]">
-
-              Current:{" "}
-
-              {formatCurrencyFull(
-                totalMonthlySpend
-              )}
-
-              /mo across{" "}
-
-              {toolCount ?? 0}{" "}
-
-              tool
-              {(toolCount ?? 0) > 1
-                ? "s"
-                : ""}
-
+              Current: {formatCurrencyFull(totalMonthlySpend)}/mo across{" "}
+              {toolCount ?? 0} tool{(toolCount ?? 0) > 1 ? "s" : ""}
             </p>
 
+            {/* Stats row */}
+            <div className="flex items-center justify-center gap-8 mt-6">
+              <div>
+                <div
+                  className="text-2xl font-black text-[#00ff88]"
+                  style={{ fontFamily: "Syne, sans-serif" }}
+                >
+                  {formatCurrencyFull(totalAnnualSavings)}
+                </div>
+                <div className="text-xs text-[var(--text-dim)]">
+                  annual savings
+                </div>
+              </div>
+              <div className="w-px h-10 bg-[var(--border)]" />
+              <div>
+                <div
+                  className="text-2xl font-black text-[#00ff88]"
+                  style={{ fontFamily: "Syne, sans-serif" }}
+                >
+                  {savingsPercentage}%
+                </div>
+                <div className="text-xs text-[var(--text-dim)]">
+                  reduction
+                </div>
+              </div>
+              <div className="w-px h-10 bg-[var(--border)]" />
+              <div>
+                <div
+                  className="text-2xl font-black text-[var(--text)]"
+                  style={{ fontFamily: "Syne, sans-serif" }}
+                >
+                  {formatCurrencyFull(totalMonthlySpend - totalMonthlySavings)}
+                </div>
+                <div className="text-xs text-[var(--text-dim)]">
+                  after optimizing
+                </div>
+              </div>
+            </div>
           </>
         )}
 
-        {/* Credex CTA */}
-
+        {/* Credex CTA — only for high savings */}
         {isHigh && (
           <div className="mt-8 p-5 rounded-xl border border-[#00ff88]/20 bg-[#00ff88]/5 text-left">
-
             <p className="text-sm font-semibold text-[var(--accent)] mb-1">
               💡 Credex can capture even more
             </p>
-
             <p className="text-xs text-[var(--text-muted)] mb-4">
               Discounted Anthropic & OpenAI credits at 30–40% below list.
               Same API, same endpoints — just cheaper.
             </p>
-
             <a
               href={`${CREDEX_CONSULT_URL}?ref=spendlens&savings=${totalMonthlySavings}`}
               target="_blank"
@@ -196,12 +172,19 @@ export default function SavingsHero({
             >
               Book a free Credex consultation →
             </a>
-
           </div>
         )}
 
+        {/* For low savings — honest message */}
+        {!isOptimal && !isHigh && (
+          <div className="mt-6 p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] text-left">
+            <p className="text-xs text-[var(--text-muted)]">
+              💬 These are the optimizations available for your current stack.
+              Re-run this audit when you add new tools or your team size changes.
+            </p>
+          </div>
+        )}
       </div>
-
     </div>
   );
 }
