@@ -93,7 +93,6 @@ export default function AuditResultsClient({
 
             <ShareAudit
               auditId={audit.id}
-              monthlySavings={audit.totalMonthlySavings}
             />
 
             {/* Lead Capture */}
