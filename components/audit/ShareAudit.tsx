@@ -4,17 +4,12 @@ import { useState } from "react";
 
 import { APP_URL } from "@/lib/constants";
 
-import { Linkedin } from "lucide-react";
-import { FaXTwitter } from "react-icons/fa6";
-
 interface ShareAuditProps {
   auditId: string;
-  monthlySavings: number;
 }
 
 export default function ShareAudit({
   auditId,
-  monthlySavings,
 }: ShareAuditProps) {
 
   const url =
@@ -60,38 +55,18 @@ export default function ShareAudit({
     }
   }
 
-  const shareText =
-    `SpendLens identified $${monthlySavings}/month in potential AI tooling savings for my stack.`;
-
-  function shareOnX() {
-
-    const shareUrl =
-      `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        shareText
-      )}&url=${encodeURIComponent(
-        url
-      )}`;
-
-    window.open(
-      shareUrl,
-      "_blank",
-      "noopener,noreferrer"
+  const tweetText =
+    encodeURIComponent(
+      `Just audited my AI tool stack with SpendLens — found real savings. Free 2-min audit: ${url}`
     );
-  }
 
-  function shareOnLinkedIn() {
+  const twitterUrl =
+    `https://twitter.com/intent/tweet?text=${tweetText}`;
 
-    const shareUrl =
-      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-        url
-      )}`;
-
-    window.open(
-      shareUrl,
-      "_blank",
-      "noopener,noreferrer"
-    );
-  }
+  const linkedinUrl =
+    `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+      url
+    )}`;
 
   return (
 
@@ -108,12 +83,14 @@ export default function ShareAudit({
       </h3>
 
       <p className="mb-4 text-xs text-[var(--text-muted)]">
-        Anyone with this link can view your savings breakdown — no login required.
+        Anyone with this link can
+        view your savings breakdown
+        — no login required.
       </p>
 
-      {/* URL + Copy */}
+      {/* Copy Link */}
 
-      <div className="flex gap-2">
+      <div className="mb-3 flex gap-2">
 
         <div className="flex-1 truncate rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2.5 font-mono text-xs text-[var(--text-muted)]">
           {url}
@@ -122,8 +99,8 @@ export default function ShareAudit({
         <button
           type="button"
           onClick={copyLink}
-          className="shrink-0 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-4 py-2 text-xs font-medium transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
           aria-label="Copy audit link"
+          className="shrink-0 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-4 py-2 text-xs font-medium transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
         >
           {copied
             ? "Copied ✓"
@@ -132,34 +109,48 @@ export default function ShareAudit({
 
       </div>
 
-      {/* Social Share Buttons */}
+      {/* Share Buttons */}
 
-      <div className="mt-4 flex flex-wrap gap-3">
+      <div className="flex gap-2">
 
-        <button
-          type="button"
-          onClick={shareOnX}
+        <a
+          href={twitterUrl}
+          target="_blank"
+          rel="noopener noreferrer"
           aria-label="Share audit on X"
-          className="flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-4 py-2 text-xs font-medium transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] py-2.5 text-center text-xs font-medium transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
         >
-          <FaXTwitter size={14} />
-          Share on X
-        </button>
 
-        <button
-          type="button"
-          onClick={shareOnLinkedIn}
+          <span>𝕏</span>
+
+          <span>
+            Share on X
+          </span>
+
+        </a>
+
+        <a
+          href={linkedinUrl}
+          target="_blank"
+          rel="noopener noreferrer"
           aria-label="Share audit on LinkedIn"
-          className="flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-4 py-2 text-xs font-medium transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] py-2.5 text-center text-xs font-medium transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
         >
-          <Linkedin size={14} />
-          Share on LinkedIn
-        </button>
+
+          <span>in</span>
+
+          <span>
+            Share on LinkedIn
+          </span>
+
+        </a>
 
       </div>
 
       <p className="mt-3 text-xs text-[var(--text-dim)]">
+
         🔒 Personal details (email, company) are never shown in shared links.
+
       </p>
 
     </div>
