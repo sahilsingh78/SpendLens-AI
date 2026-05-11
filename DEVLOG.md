@@ -172,27 +172,34 @@ Final QA pass, submit Google Form.
 
 ## Day 7 — 2026-05-12
 
-**Hours worked:** 3
+**Hours worked:** 4
 
 **What I did:**
-Final pre-submission checklist:
-- Verified live URL works in incognito: `https://spend-lens-ai-uah9.vercel.app` ✅
-- Ran `npm test` — all 41 tests passing ✅
-- Confirmed CI green on GitHub Actions ✅
-- Confirmed all 12 markdown docs at repo root ✅
-- Ran git log — commits on 5+ distinct calendar days ✅
-- Verified shareable audit URL strips PII correctly ✅
-- Verified OG image renders with savings number ✅
+Final QA pass on live URL — tested full end-to-end flow: form submission,
+audit results, email capture, shareable URL, OG image preview.
 
-Submitted the Google Form with GitHub repo URL and live deployed URL.
+Fixed ShareAudit component — X and LinkedIn share buttons were using button
+elements instead of anchor tags, so clicks weren't opening the share URLs.
+Replaced with proper anchor tags with target="_blank".
+
+Fixed NEXT_PUBLIC_APP_URL in Vercel — share links and email CTAs were showing
+localhost:3000 instead of the production URL. Added correct env var and
+redeployed.
+
+Verified all 41 tests passing with npm test. CI green on GitHub Actions.
+Lighthouse mobile: Performance 99, Accessibility 91, Best Practices 100, SEO 100.
+All 12 markdown docs present at repo root. Submitted Google Form.
 
 **What I learned:**
-The entrepreneurial files (GTM, ECONOMICS, USER_INTERVIEWS) took longer than any of the code. They require actual thinking, not just execution. The user interviews were the most valuable part — talking to real founders changed how I framed the Credex CTA.
+Share buttons must be anchor tags with href, not button elements with onClick
+handlers — browsers block window.open() calls that aren't triggered by direct
+user interaction on an anchor element.
 
-Shipping a complete product in 7 days requires making quick decisions and not revisiting them.
+Environment variables in Vercel need a full redeploy to take effect — just
+saving them in the dashboard isn't enough.
 
 **Blockers / what I'm stuck on:**
 None — submission complete.
 
 **Plan for tomorrow:**
-Await Round 2 results. Continue improving the recommendation engine based on user feedback.
+Await Round 2 results.
