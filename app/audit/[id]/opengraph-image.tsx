@@ -24,11 +24,31 @@ interface OpenGraphImageProps {
 export default async function OpenGraphImage({
   params,
 }: OpenGraphImageProps) {
+
   try {
+
     const audit =
       await getAudit(params.id);
 
+    const monthlySavings =
+      audit.totalMonthlySavings || 0;
+
+    const annualSavings =
+      audit.totalAnnualSavings ||
+      monthlySavings * 12;
+
+    const headline =
+      monthlySavings > 0
+        ? `$${monthlySavings}/mo savings identified`
+        : "Your AI stack is already optimized";
+
+    const subheadline =
+      monthlySavings > 0
+        ? `$${annualSavings}/year in potential savings`
+        : "Minimal redundant AI tooling spend detected";
+
     return new ImageResponse(
+
       (
         <div
           style={{
@@ -36,31 +56,32 @@ export default async function OpenGraphImage({
             height: "100%",
             display: "flex",
             flexDirection: "column",
-            justifyContent:
-              "space-between",
-            padding: "60px",
+            justifyContent: "space-between",
+            padding: "64px",
             background:
-              "linear-gradient(135deg, #0a0a0a 0%, #111111 100%)",
+              "linear-gradient(135deg, #0a0a0a 0%, #111827 100%)",
             color: "#f5f5f5",
-            fontFamily:
-              "Inter, sans-serif",
             position: "relative",
             overflow: "hidden",
+            fontFamily:
+              "Inter, sans-serif",
           }}
         >
-          {/* Glow */}
+
+          {/* Glow Effect */}
 
           <div
             style={{
               position: "absolute",
-              top: "-120px",
-              right: "-120px",
+              top: "-100px",
+              right: "-100px",
               width: "420px",
               height: "420px",
               borderRadius: "999px",
               background:
                 "rgba(0,255,136,0.12)",
-              filter: "blur(80px)",
+              filter:
+                "blur(100px)",
             }}
           />
 
@@ -70,31 +91,29 @@ export default async function OpenGraphImage({
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: "18px",
+              gap: "24px",
+              zIndex: 2,
             }}
           >
+
             <div
               style={{
                 display: "flex",
-                alignItems:
-                  "center",
-                gap: "16px",
+                alignItems: "center",
+                gap: "18px",
               }}
             >
+
               <div
                 style={{
-                  width: "70px",
-                  height: "70px",
-                  borderRadius:
-                    "20px",
-                  background:
-                    "#00ff88",
-                  display: "flex",
-                  alignItems:
-                    "center",
-                  justifyContent:
-                    "center",
+                  width: "72px",
+                  height: "72px",
+                  borderRadius: "20px",
+                  background: "#00ff88",
                   color: "#000",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   fontWeight: 900,
                   fontSize: "34px",
                 }}
@@ -105,14 +124,13 @@ export default async function OpenGraphImage({
               <div
                 style={{
                   display: "flex",
-                  flexDirection:
-                    "column",
+                  flexDirection: "column",
                 }}
               >
+
                 <span
                   style={{
-                    fontSize:
-                      "38px",
+                    fontSize: "42px",
                     fontWeight: 900,
                   }}
                 >
@@ -121,69 +139,57 @@ export default async function OpenGraphImage({
 
                 <span
                   style={{
-                    fontSize:
-                      "20px",
-                    color:
-                      "#888888",
+                    fontSize: "22px",
+                    color: "#9ca3af",
                   }}
                 >
                   AI Spend Audit
                 </span>
+
               </div>
+
             </div>
 
             <div
               style={{
-                marginTop: "30px",
                 display: "flex",
-                flexDirection:
-                  "column",
-                gap: "10px",
+                flexDirection: "column",
+                marginTop: "32px",
+                gap: "14px",
               }}
             >
+
               <span
                 style={{
-                  fontSize:
-                    "26px",
-                  color:
-                    "#aaaaaa",
+                  fontSize: "24px",
+                  color: "#9ca3af",
                 }}
               >
-                Potential savings
+                Audit Summary
               </span>
 
               <span
                 style={{
-                  fontSize:
-                    "88px",
+                  fontSize: "82px",
                   fontWeight: 900,
-                  color:
-                    "#00ff88",
+                  color: "#00ff88",
                   lineHeight: 1,
                 }}
               >
-                $
-                {
-                  audit.totalMonthlySavings
-                }
-                /mo
+                {headline}
               </span>
 
               <span
                 style={{
-                  fontSize:
-                    "30px",
-                  color:
-                    "#888888",
+                  fontSize: "30px",
+                  color: "#d1d5db",
                 }}
               >
-                $
-                {
-                  audit.totalAnnualSavings
-                }
-                /year recaptured
+                {subheadline}
               </span>
+
             </div>
+
           </div>
 
           {/* Footer */}
@@ -191,36 +197,30 @@ export default async function OpenGraphImage({
           <div
             style={{
               display: "flex",
-              justifyContent:
-                "space-between",
-              alignItems:
-                "center",
+              justifyContent: "space-between",
+              alignItems: "center",
               borderTop:
-                "1px solid #222",
+                "1px solid rgba(255,255,255,0.08)",
               paddingTop: "28px",
+              zIndex: 2,
             }}
           >
+
             <div
               style={{
                 display: "flex",
                 gap: "24px",
+                color: "#9ca3af",
                 fontSize: "22px",
-                color:
-                  "#999999",
               }}
             >
+
               <span>
-                {
-                  audit.toolCount
-                }{" "}
-                tools
+                {audit.toolCount} tools audited
               </span>
 
               <span>
-                {
-                  audit.teamSize
-                }{" "}
-                seats
+                {audit.teamSize} seats
               </span>
 
               <span
@@ -229,50 +229,55 @@ export default async function OpenGraphImage({
                     "capitalize",
                 }}
               >
-                {
-                  audit.useCase
-                }
+                {audit.useCase}
               </span>
+
             </div>
 
             <div
               style={{
-                fontSize: "22px",
-                color:
-                  "#00ff88",
-                fontWeight: 700,
+                color: "#00ff88",
+                fontWeight: 800,
+                fontSize: "24px",
               }}
             >
-              spendlens.ai
+              spendlens.vercel.app
             </div>
+
           </div>
+
         </div>
       ),
+
       size
     );
+
   } catch {
+
     return new ImageResponse(
+
       (
         <div
           style={{
             width: "100%",
             height: "100%",
             display: "flex",
-            alignItems:
-              "center",
-            justifyContent:
-              "center",
-            background:
-              "#0a0a0a",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "#0a0a0a",
             color: "#ffffff",
-            fontSize: "48px",
-            fontWeight: 800,
+            fontSize: "52px",
+            fontWeight: 900,
+            fontFamily:
+              "Inter, sans-serif",
           }}
         >
           SpendLens Audit
         </div>
       ),
+
       size
     );
+
   }
 }
