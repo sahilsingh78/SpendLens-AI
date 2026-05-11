@@ -135,30 +135,38 @@ Accessibility fixes, Lighthouse audit, CI verification, final polish.
 
 ---
 
-
 ## Day 6 — 2026-05-11
 
 **Hours worked:** 4
 
 **What I did:**
-Ran Lighthouse audit on the live Vercel URL. Scores: Performance 91, Accessibility 92, Best Practices 90. All above required thresholds.
+Fixed SpendPieChart tooltip text color — values were rendering in dark/invisible 
+color on hover. Added `labelStyle` and `itemStyle` to Tooltip component with 
+`color: "#f5f5f5"` to make them visible on the dark background.
 
-Added `aria-label` attributes to chart wrapper divs in `SavingsChart.tsx` and `SpendPieChart.tsx`. Added `role="img"` to decorative chart containers. Added `aria-label` to copy button in `ShareAudit.tsx`.
+Ran Lighthouse audit on live Vercel URL (mobile). Scores: Performance 99, 
+Accessibility 91, Best Practices 100, SEO 100. Accessibility improved from 84 
+to 91 after adding aria-labels, htmlFor/id connections on form inputs, and 
+improving text contrast from #888888 to #a0a0a0.
 
-Verified GitHub Actions CI is green on latest commit. All 41 tests pass in CI.
+Verified CI is green on GitHub Actions. All 41 tests passing.
 
-Verified all 6 Vercel environment variables are correctly set.
-
-Did a full end-to-end test on the live URL — form submission, audit results, email capture, shareable URL, OG image preview all working correctly.
+Verified full end-to-end flow on live URL — form, audit results, charts, 
+email capture, shareable URL all working correctly.
 
 **What I learned:**
-Lighthouse accessibility checks flag missing ARIA labels on non-text elements like charts even when purely decorative. Adding `role="img"` with `aria-label` is the correct fix.
+Recharts Tooltip and Legend are separate components with different prop APIs. 
+`labelStyle` and `itemStyle` belong on Tooltip, not Legend. Putting them on 
+Legend causes a TypeScript overload error.
+
+Color contrast is the most common Lighthouse Accessibility failure for dark 
+mode apps — #888 on #111 fails WCAG AA. #a0a0a0 on #111 passes.
 
 **Blockers / what I'm stuck on:**
-None significant.
+None.
 
 **Plan for tomorrow:**
-Final submission prep, last DEVLOG entry, submit Google Form.
+Final QA pass, submit Google Form.
 
 ---
 
