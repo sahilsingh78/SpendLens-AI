@@ -10,6 +10,16 @@ export default function RecommendationCard({ rec, index }: RecommendationCardPro
   const actionColor = getActionColor(rec.action);
   const hasSavings = rec.monthlySavings > 0;
 
+  // Fix 1: For credits action, show after-credit price instead of $0
+  const afterPrice =
+    rec.action === "credits"
+      ? `~${formatCurrencyFull(Math.round(rec.currentSpend * 0.65))}/mo via credits`
+      : `${formatCurrencyFull(rec.currentSpend - rec.monthlySavings)}/mo`;
+
+  // Fix 2: Never show "hobby" as recommended plan — min recommendation is "pro"
+  const recommendedPlanDisplay =
+    rec.recommendedPlan === "hobby" ? "pro" : rec.recommendedPlan;
+
   return (
     <div
       className="p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] animate-fade-in card-hover"
@@ -18,7 +28,10 @@ export default function RecommendationCard({ rec, index }: RecommendationCardPro
       <div className="flex items-start justify-between gap-4 mb-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1 flex-wrap">
-            <h3 className="font-semibold text-sm" style={{ fontFamily: "Syne, sans-serif" }}>
+            <h3
+              className="font-semibold text-sm"
+              style={{ fontFamily: "Syne, sans-serif" }}
+            >
               {rec.toolName}
             </h3>
             <span className="text-xs text-[var(--text-dim)] font-mono capitalize">
@@ -37,9 +50,10 @@ export default function RecommendationCard({ rec, index }: RecommendationCardPro
             >
               {getActionLabel(rec.action)}
             </span>
-            {rec.recommendedPlan && (
+            {recommendedPlanDisplay && (
               <span className="text-xs text-[var(--text-muted)]">
-                → {rec.recommendedTool ?? rec.toolName} {rec.recommendedPlan}
+                → {rec.recommendedTool ?? rec.toolName}{" "}
+                <span className="capitalize">{recommendedPlanDisplay}</span>
               </span>
             )}
             {rec.recommendedTool && !rec.recommendedPlan && (
@@ -54,15 +68,20 @@ export default function RecommendationCard({ rec, index }: RecommendationCardPro
         <div className="text-right shrink-0">
           {hasSavings ? (
             <>
-              <div className="text-lg font-black text-[var(--accent)]" style={{ fontFamily: "Syne, sans-serif" }}>
-                {formatCurrencyFull(rec.monthlySavings)}/mo
+              <div
+                className="text-lg font-black text-[var(--accent)]"
+                style={{ fontFamily: "Syne, sans-serif" }}
+              >
+                -{formatCurrencyFull(rec.monthlySavings)}/mo
               </div>
               <div className="text-xs text-[var(--text-dim)]">
-                {formatCurrencyFull(rec.annualSavings)}/yr
+                -{formatCurrencyFull(rec.annualSavings)}/yr
               </div>
             </>
           ) : (
-            <div className="text-sm font-semibold text-[var(--text-muted)]">Optimal</div>
+            <div className="text-sm font-semibold text-[var(--text-muted)]">
+              Optimal ✓
+            </div>
           )}
         </div>
       </div>
@@ -72,16 +91,14 @@ export default function RecommendationCard({ rec, index }: RecommendationCardPro
         {rec.reason}
       </p>
 
-      {/* Current spend */}
+      {/* Current → recommended spend */}
       <div className="mt-2 flex items-center gap-1 text-xs text-[var(--text-dim)]">
         <span>Current:</span>
         <span className="font-mono">{formatCurrencyFull(rec.currentSpend)}/mo</span>
         {hasSavings && (
           <>
             <span>→</span>
-            <span className="font-mono text-[var(--accent)]">
-              {formatCurrencyFull(rec.currentSpend - rec.monthlySavings)}/mo
-            </span>
+            <span className="font-mono text-[var(--accent)]">{afterPrice}</span>
           </>
         )}
       </div>

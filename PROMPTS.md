@@ -33,17 +33,44 @@ Where `{toolLines}` is formatted as:
 
 ---
 
-## Why I Wrote It This Way
+## Model
 
-**Word count constraint (90–110 words):** The summary appears in an email and on the results page alongside detailed recommendation cards. It needs to be a quick read that adds synthesis, not repetition. Too short feels dismissive; too long competes with the data.
+**Production:** Google Gemini 1.5 Flash (`gemini-1.5-flash`)
 
-**"Financial advisor" framing:** I tried "startup CFO" first — the output was too formal and used terms like "EBITDA impact" that don't resonate with a 5-person seed-stage team. "Financial advisor" produced more conversational, actionable language.
+**Why Gemini 1.5 Flash:**
+Switched from Anthropic claude-3-5-haiku to Gemini 1.5 Flash on Day 5.
+Reason: Gemini free tier is available without billing setup, making it
+accessible for open-source contributors and evaluators running the project
+locally. Output quality for 90-110 word financial summaries is equivalent.
+Same prompt structure, same fallback logic — only the API client changed.
 
-**Explicit no-bullet-points instruction:** Without this, Claude defaults to bullet points roughly 40% of the time. A paragraph reads better in email HTML and feels more like a human wrote it.
+---
 
-**"Do NOT mention Credex unless credits are recommended":** Early versions without this instruction sometimes added a Credex mention even for low-savings audits. That felt like a sales pitch when the user had just been told they're spending efficiently. Trust is more valuable than a mention.
+## Why I Wrote the Prompt This Way
 
-**No AI for the math:** The prompt receives pre-computed numbers. The LLM only writes the narrative. I explicitly did not ask Claude to calculate savings — it would hallucinate numbers. The rule engine calculates; Claude narrates.
+**Word count constraint (90–110 words):** The summary appears in an email
+and on the results page alongside detailed recommendation cards. It needs
+to be a quick read that adds synthesis, not repetition. Too short feels
+dismissive; too long competes with the data.
+
+**"Financial advisor" framing:** I tried "startup CFO" first — the output
+was too formal and used terms like "EBITDA impact" that don't resonate with
+a 5-person seed-stage team. "Financial advisor" produced more conversational,
+actionable language.
+
+**Explicit no-bullet-points instruction:** Without this, the model defaults
+to bullet points roughly 40% of the time. A paragraph reads better in email
+HTML and feels more like a human wrote it.
+
+**"Do NOT mention Credex unless credits are recommended":** Early versions
+without this instruction sometimes added a Credex mention even for
+low-savings audits. That felt like a sales pitch when the user had just been
+told they're spending efficiently. Trust is more valuable than a mention.
+
+**No AI for the math:** The prompt receives pre-computed numbers. The LLM
+only writes the narrative. I explicitly did not ask the model to calculate
+savings — it would hallucinate numbers. The rule engine calculates; the
+model narrates.
 
 ---
 
@@ -51,7 +78,7 @@ Where `{toolLines}` is formatted as:
 
 **Version 1 — Too open-ended:**
 ```
-Write a personalized summary of this AI spend audit for a startup founder. 
+Write a personalized summary of this AI spend audit for a startup founder.
 Audit data: {json}
 ```
 Result: 300+ word essays, bullet lists, inconsistent tone. Unusable.
@@ -60,44 +87,51 @@ Result: 300+ word essays, bullet lists, inconsistent tone. Unusable.
 ```
 You are a SaaS CFO analyzing AI tool spend...
 ```
-Result: Overly formal, used accounting terminology, felt cold. Founders don't respond to "your OpEx allocation is suboptimal."
+Result: Overly formal, used accounting terminology, felt cold. Founders
+don't respond to "your OpEx allocation is suboptimal."
 
 **Version 3 — No word count:**
 ```
 Write a 2-3 sentence summary...
 ```
-Result: 2 sentences was too short to include the top saving + action + closing. 3 sentences felt rushed. Switching to a word count range (90-110) gave the model room to breathe while keeping it tight.
+Result: 2 sentences was too short to include the top saving + action +
+closing. 3 sentences felt rushed. Switching to a word count range (90-110)
+gave the model room to breathe while keeping it tight.
 
-**Version 4 — Asking Claude to identify the top opportunity:**
+**Version 4 — Asking the model to identify the top opportunity:**
 ```
 Based on the audit data, identify the single biggest saving and write a paragraph...
 ```
-Result: Claude sometimes picked a smaller saving opportunity if the reason string was more compelling. Pre-computing and injecting `topRecommendation` explicitly fixed this.
+Result: The model sometimes picked a smaller saving opportunity if the
+reason string was more compelling. Pre-computing and injecting
+`topRecommendation` explicitly fixed this.
 
 ---
 
 ## Fallback Summary (No AI)
 
-When the Anthropic API is unavailable (network error, rate limit, missing key), the system falls back to a deterministic template:
+When the Gemini API is unavailable (network error, rate limit, missing key),
+the system falls back to a deterministic template:
 
 ```typescript
 function buildFallbackSummary(audit: AuditResult): string {
   if (totalMonthlySavings === 0) {
-    return `Your {teamSize}-person team is spending {totalMonthlySpend}/month on AI 
-    tools efficiently. Across {count} tools audited, each plan aligns with your 
+    return `Your {teamSize}-person team is spending {totalMonthlySpend}/month on AI
+    tools efficiently. Across {count} tools audited, each plan aligns with your
     {useCase} workflow...`
   }
-  
+
   // Find top recommendation by savings
-  const topRec = recommendations.reduce((a, b) => 
+  const topRec = recommendations.reduce((a, b) =>
     b.monthlySavings > a.monthlySavings ? b : a
   );
-  
-  return `Your {teamSize}-person team is spending {totalMonthlySpend}/month on AI 
-  tools, with {totalMonthlySavings}/month available to recapture. The biggest 
+
+  return `Your {teamSize}-person team is spending {totalMonthlySpend}/month on AI
+  tools, with {totalMonthlySavings}/month available to recapture. The biggest
   opportunity is {topRec.toolName}: {topRec.reason}...`
 }
 ```
 
-This ensures the AI Insight card always shows something useful, even if the API call fails. The fallback is clearly templated but accurate — it uses the same computed numbers as the real AI summary.
-
+This ensures the AI Insight card always shows something useful, even if the
+API call fails. The fallback is clearly templated but accurate — it uses the
+same computed numbers as the real AI summary.

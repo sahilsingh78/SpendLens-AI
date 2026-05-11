@@ -84,7 +84,9 @@ export default function AuditResultsClient({ audit }: AuditResultsClientProps) {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-[var(--text-muted)]">Audit tier</span>
-                  <span className="font-medium capitalize text-[var(--accent)]">{audit.tier}</span>
+                  <span className="font-medium capitalize text-[var(--accent)]">
+                    {audit.tier}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-[var(--text-muted)]">Potential savings</span>
@@ -93,6 +95,16 @@ export default function AuditResultsClient({ audit }: AuditResultsClientProps) {
                   </span>
                 </div>
               </div>
+            </div>
+
+            {/* Run another audit */}
+            <div className="text-center pt-2">
+              <a
+                href="/"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] text-sm text-[var(--text-muted)] hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors"
+              >
+                ← Run another audit
+              </a>
             </div>
           </div>
         </div>
