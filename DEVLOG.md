@@ -1,6 +1,6 @@
 # DEVLOG.md
 
-Daily development log for SpendLens AI — a free AI spend audit tool for startups built as part of the Credex Web Dev Intern assignment.
+Daily log for SpendLens AI — built for Credex Web Dev Intern Round 1.
 
 ---
 
@@ -9,18 +9,20 @@ Daily development log for SpendLens AI — a free AI spend audit tool for startu
 **Hours worked:** 2
 
 **What I did:**
-Received the Credex assignment and read through the full brief carefully. Spent time understanding the product opportunity — this is not a coding exercise, it's an entrepreneurial build. The core insight: most startups have no benchmark for their AI tool spend. They just pay the bill.
+Got the assignment email. Read it twice because it's actually a lot. First thought was "okay this is basically a SaaS product not just a coding problem." Spent most of the time just understanding what they actually want — the Credex business model, why a free audit tool makes sense as lead gen, why email should come after results not before.
 
-Decided on the stack: Next.js 14 App Router, TypeScript, Tailwind CSS, Supabase for storage, Resend for email, Anthropic API for the AI summary. Planned the full folder structure and researched current pricing for all 8 required tools by visiting each vendor's official pricing page.
+Stack decision was pretty quick — Next.js because I've used it before and API routes + SSR in one framework just makes sense here. Tailwind because I'm faster with it. Supabase because I didn't want to set up Postgres from scratch in 7 days.
+
+Spent an hour going through all the pricing pages. Cursor Business is $40 not $20 like I thought. Claude has a Max plan now at $100 and $200 that I had no idea existed.
 
 **What I learned:**
-The assignment explicitly says "pricing data must be current as of submission week." Windsurf Pro is $15 not $20 — would have gotten that wrong from memory. Claude now has a Max tier at $100 and $200 I didn't know about.
+Don't assume you know current pricing. I would've hardcoded wrong numbers from memory. Always check the actual page.
 
 **Blockers / what I'm stuck on:**
-How to model API-based tools (Anthropic API, OpenAI API) in the form — these are pay-per-token, not seat-based. Settled on letting users enter their actual monthly spend directly.
+API tools like Anthropic API and OpenAI API are pay-per-token not seat based. Didn't know how to put that in a form. Decided to just let users type their actual monthly spend — simple and honest.
 
 **Plan for tomorrow:**
-Set up the repo, initialize Next.js, build the core data layer and audit engine.
+Set up the repo properly and start building the audit engine and types.
 
 ---
 
@@ -29,18 +31,20 @@ Set up the repo, initialize Next.js, build the core data layer and audit engine.
 **Hours worked:** 3
 
 **What I did:**
-Set up the project repository with Next.js 14, TypeScript, Tailwind CSS, ESLint. Created the full folder structure. Wrote out all TypeScript interfaces in `lib/types.ts`. Designed the recommendation rule table structure in `data/recommendations.ts` — each rule has a condition function, savings formula, and reason string.
+Initialized the Next.js project. Spent longer than expected on the TypeScript types in `lib/types.ts` — wanted to get `ToolEntry`, `AuditInput`, `AuditResult` right before writing any component because changing types later is painful.
 
-Researched and finalized pricing for all 8 tools. Wrote `data/pricing-data.ts` with full `TOOL_CONFIGS` array. Started planning the audit engine logic.
+Started designing the recommendation rule table. Each rule has: which tool, which plan, a condition, a savings formula, and a reason string. The reason string is the most important part — it has to sound like a finance person wrote it, not a developer.
+
+Went through all 8 pricing pages again and finalized `data/pricing-data.ts`.
 
 **What I learned:**
-Getting the types right first makes everything downstream cleaner. Spending time on `types.ts` before writing any component code saved me from refactoring later.
+Doing types first actually saves time. Every component I write after this just autocompletes because TS knows the shape of everything.
 
 **Blockers / what I'm stuck on:**
-The credits recommendation for API tools is different from plan-switch recommendations — needs its own action type. Solved by adding a `credits` action type.
+Credits recommendations (for API tools) are different from plan-switch recommendations. A "downgrade" saves money by switching plans. A "credits" recommendation saves money through a different purchasing channel. Needed a separate action type for this.
 
 **Plan for tomorrow:**
-Build audit engine, all components, API routes, and deploy.
+Build everything — audit engine, form, API routes, results page. Big day.
 
 ---
 
@@ -49,34 +53,34 @@ Build audit engine, all components, API routes, and deploy.
 **Hours worked:** 8
 
 **What I did:**
-Major build day — shipped the majority of the codebase.
+Long day. Built basically the entire app.
 
-Built `lib/audit-engine.ts` — the core engine that takes `AuditInput`, runs each tool through the recommendation rule table, computes monthly + annual savings, assigns a tier (optimal/low/mid/high).
+`lib/audit-engine.ts` — takes your tools, runs them through the rule table, spits out savings per tool, total savings, and a tier (optimal/low/mid/high).
 
-Built the entire form stack: `SpendForm.tsx`, `ToolSelector.tsx`, `PricingInput.tsx`, `SeatCounter.tsx`, `TeamSizeInput.tsx`, `UseCaseSelect.tsx`. Form state persists via `useLocalStorage` hook.
+Form components — `SpendForm.tsx`, `ToolSelector.tsx`, `PricingInput.tsx`, `SeatCounter.tsx`, `TeamSizeInput.tsx`, `UseCaseSelect.tsx`. Form state saves to localStorage so if you refresh you don't lose everything.
 
-Built `app/page.tsx` — landing page with Hero, Features, Stats, FAQ, CTA sections. Built `app/layout.tsx` with full OG metadata.
+Landing page — hero with ticker, features grid, FAQ accordion, stats section.
 
-Built all 4 API routes: audit, lead, share, summary. Built `lib/supabase.ts`, `lib/resend.ts`, `lib/ai-summary.ts`, `lib/rate-limit.ts`.
+All 4 API routes — audit, lead, share, summary.
 
-Built full audit results page: `SavingsHero.tsx`, `RecommendationCard.tsx`, `AuditBreakdown.tsx`, `SavingsChart.tsx`, `SpendPieChart.tsx`, `AIInsightCard.tsx`, `ShareAudit.tsx`, `LeadCaptureForm.tsx`.
+Results page — savings hero, per-tool cards, bar chart, pie chart, AI insight card, share button, email form.
 
-Built `app/audit/[id]/opengraph-image.tsx` — dynamic OG image using `ImageResponse`.
-
-Deployed to Vercel. Live URL working.
+Deployed to Vercel at the end of the day. It actually worked first try which was surprising.
 
 **What I learned:**
-Non-blocking DB writes are important for UX — `saveAudit(audit).catch(console.error)` lets the API respond instantly. The OG image runtime must be `edge` — it won't work with the default Node runtime.
+Two things broke the Vercel build:
+
+1. `createClient()` from Supabase at module level — `process.env.NEXT_PUBLIC_SUPABASE_URL` is undefined at build time. Fix was to move the client creation inside a function so it only runs when actually called at runtime.
+
+2. Same issue with Resend — `new Resend(process.env.RESEND_API_KEY)` at the top of the file = build crash. Same lazy initialization fix.
+
+OG image needs `export const runtime = "edge"` — took me 30 mins to find this in the docs.
 
 **Blockers / what I'm stuck on:**
-TypeScript error — duplicate `createClient` identifier in `lib/supabase.ts`. A `global.d.ts` file had a `declare module "@supabase/supabase-js"` block conflicting with real types. Deleted it. Fixed.
-
-Resend build error — `new Resend(process.env.RESEND_API_KEY)` at module level crashes the Next.js build when env vars are missing. Fixed by lazy-initializing inside a `getResendClient()` function.
-
-Supabase same issue — `createClient()` at module level crashes build. Fixed with same lazy pattern.
+TypeScript was throwing `Duplicate identifier 'createClient'`. Spent almost 2 hours on this. I had created a `global.d.ts` file early on with `declare module "@supabase/supabase-js"` to fix a different error, forgot about it, and it was conflicting with the real package types. Deleted the block and it fixed immediately. The error message pointed to `supabase.ts` line 4 but the actual problem was in `global.d.ts`. Annoying.
 
 **Plan for tomorrow:**
-Add tests, CI, fix form bugs, add favicon, debug email delivery.
+Tests, CI, markdown docs, fix anything broken.
 
 ---
 
@@ -85,30 +89,26 @@ Add tests, CI, fix form bugs, add favicon, debug email delivery.
 **Hours worked:** 6
 
 **What I did:**
-Added Vitest — wrote 41 tests across 5 files covering audit engine, pricing logic, recommendation rules, Zod validation, and rate limiting. All passing. Set up `vitest.config.ts` with path alias resolution.
+Wrote 41 tests using Vitest across 5 files — audit engine, pricing, recommendations, validation, API logic. Setting up Vitest with Next.js path aliases required adding `resolve.alias` to vitest config manually — not in the docs anywhere obvious.
 
-Fixed `package.json` — missing test script and comma syntax error. Updated `package-lock.json` to include vitest dependencies.
+CI pipeline — `npm ci` was failing because `package-lock.json` didn't have vitest in it after I installed locally. Switched to `npm install` in the workflow.
 
-Configured `.github/workflows/ci.yml` — runs lint, type check, and tests on every push to main. Fixed CI failure caused by `npm ci` and out-of-sync lock file — switched to `npm install`.
+Wrote all 12 markdown docs. GTM, ECONOMICS and USER_INTERVIEWS took the longest.
 
-Written all 12 required markdown docs and pushed to repo root: README, ARCHITECTURE, DEVLOG, REFLECTION, TESTS, PRICING_DATA, PROMPTS, GTM, ECONOMICS, USER_INTERVIEWS, LANDING_COPY, METRICS.
+Email debugging — FROM_EMAIL was broken, rendering as `SpendLens <onboarding@>` with nothing after the @. Fixed to just `onboarding@resend.dev`.
 
-Added SpendLens favicon — green S logo — in `public/icons/`. Updated `app/layout.tsx` to point to correct paths.
-
-Fixed Resend `FROM_EMAIL` — was `SpendLens <onboarding@>` (broken). Corrected to `onboarding@resend.dev`. Updated `RESEND_API_KEY` in Vercel dashboard.
-
-Removed Twitter/LinkedIn share buttons from `ShareAudit.tsx` — copy link only.
+Found that `NEXT_PUBLIC_APP_URL` wasn't set in Vercel so all share links were showing `localhost:3000`. Added it to env vars and redeployed.
 
 **What I learned:**
-CI `npm ci` requires lock file to be in perfect sync. After installing vitest locally, the lock file had new entries that CI didn't know about. Switching to `npm install` in CI fixed it immediately.
+`npm ci` is strict about lock file sync. Install something locally, forget to commit the lock file, CI breaks. Should have committed it immediately.
 
-Resend sandbox `onboarding@resend.dev` only delivers to the account owner's verified email. For any other recipient, a verified domain is required.
+Resend sandbox only sends to your own registered email — not obvious from the docs.
 
 **Blockers / what I'm stuck on:**
-`NEXT_PUBLIC_APP_URL` not set in Vercel — email audit links were showing `localhost:3000` instead of the Vercel URL. Fixed by adding env var in Vercel dashboard and redeploying.
+The lock file issue took longer than it should have.
 
 **Plan for tomorrow:**
-Fix form input bugs, add charts, improve accessibility, verify CI green.
+Fix form bugs, add favicon, accessibility checks.
 
 ---
 
@@ -117,21 +117,26 @@ Fix form input bugs, add charts, improve accessibility, verify CI green.
 **Hours worked:** 5
 
 **What I did:**
-Fixed three form input bugs — `TeamSizeInput` and `PricingInput` were showing leading zeros (e.g. "05" instead of "5") and couldn't be cleared with backspace. Root cause: controlled inputs using `value={value}` with a number type. Fixed with `value={value === 0 ? "" : value}` and `onBlur` handlers. Same fix applied to `SeatCounter`.
+Three form bugs that were bothering me:
 
-Fixed chart rendering — `AuditBreakdown.tsx` was missing `SpendPieChart` import. Added both charts side by side using `grid md:grid-cols-2`. Fixed `SpendPieChart` type error — was using `ToolInput` instead of `ToolEntry`. Added null guard for empty data.
+1. Team size input was showing "05" when you typed 5. React controlled number input issue — if `value={someNumber}` and the number is 0, you can't clear it to type something new. Fixed with `value={value === 0 ? "" : value}` and `onBlur` to reset to minimum if empty.
 
-Aligned Tool and Plan dropdowns to same height using `grid-cols-2` with consistent label spacing.
+2. Same fix for PricingInput and SeatCounter.
+
+3. Tool and Plan dropdowns weren't at the same height — label spacing was inconsistent. Fixed with `grid-cols-2` and `flex flex-col gap-1.5`.
+
+Added SpendPieChart which I had missed — `AuditBreakdown.tsx` was only showing the bar chart. Added both side by side.
+
+Added favicon — green S logo, placed in `public/icons/`.
 
 **What I learned:**
-React controlled number inputs need special handling — binding `value={someNumber}` prevents clearing the field. Empty string as displayed value when number is 0 solves this.
+React number inputs are surprisingly tricky. Empty string as the displayed fallback when value is 0 is the right pattern.
 
 **Blockers / what I'm stuck on:**
-Charts only appear when savings > 0 — this is correct behavior but wasn't obvious during testing with optimal plans.
+Charts weren't showing at first. `SpendPieChart` was using `ToolInput` type which doesn't exist in my types — should be `ToolEntry`. Classic typo.
 
 **Plan for tomorrow:**
-Accessibility fixes, Lighthouse audit, CI verification, final polish.
-
+Lighthouse audit, accessibility fixes, final polish.
 
 ---
 
@@ -140,33 +145,26 @@ Accessibility fixes, Lighthouse audit, CI verification, final polish.
 **Hours worked:** 4
 
 **What I did:**
-Fixed SpendPieChart tooltip text color — values were rendering in dark/invisible 
-color on hover. Added `labelStyle` and `itemStyle` to Tooltip component with 
-`color: "#f5f5f5"` to make them visible on the dark background.
+Ran Lighthouse on mobile. Performance 99, Accessibility 84, Best Practices 100, SEO 100. Accessibility was below required 90 so fixed:
 
-Ran Lighthouse audit on live Vercel URL (mobile). Scores: Performance 99, 
-Accessibility 91, Best Practices 100, SEO 100. Accessibility improved from 84 
-to 91 after adding aria-labels, htmlFor/id connections on form inputs, and 
-improving text contrast from #888888 to #a0a0a0.
+- Added `htmlFor` + `id` to form labels and inputs — TeamSizeInput and UseCaseSelect labels weren't connected to their inputs
+- Added `role="img"` + `aria-label` to chart wrappers
+- Changed `--text-muted` from `#888888` to `#a0a0a0` — `#888` on `#111` fails WCAG AA contrast
 
-Verified CI is green on GitHub Actions. All 41 tests passing.
+After fixes Accessibility went 84 → 91. ✅
 
-Verified full end-to-end flow on live URL — form, audit results, charts, 
-email capture, shareable URL all working correctly.
+Added benchmark comparison card to results page — shows your spend per dev vs peer average for your company stage.
+
+Fixed pie chart tooltip text color — wasn't setting `labelStyle` and `itemStyle` explicitly so values showed in dark on hover.
 
 **What I learned:**
-Recharts Tooltip and Legend are separate components with different prop APIs. 
-`labelStyle` and `itemStyle` belong on Tooltip, not Legend. Putting them on 
-Legend causes a TypeScript overload error.
-
-Color contrast is the most common Lighthouse Accessibility failure for dark 
-mode apps — #888 on #111 fails WCAG AA. #a0a0a0 on #111 passes.
+`labelStyle` and `itemStyle` go on the Tooltip in Recharts, not Legend. Putting them on Legend throws a TypeScript overload error.
 
 **Blockers / what I'm stuck on:**
-None.
+Nothing major.
 
 **Plan for tomorrow:**
-Final QA pass, submit Google Form.
+Final QA, submit.
 
 ---
 
@@ -175,31 +173,21 @@ Final QA pass, submit Google Form.
 **Hours worked:** 4
 
 **What I did:**
-Final QA pass on live URL — tested full end-to-end flow: form submission,
-audit results, email capture, shareable URL, OG image preview.
+Final QA in incognito — full flow: form → audit → results → share link → email.
 
-Fixed ShareAudit component — X and LinkedIn share buttons were using button
-elements instead of anchor tags, so clicks weren't opening the share URLs.
-Replaced with proper anchor tags with target="_blank".
+Share buttons (X and LinkedIn) weren't clickable — they were `<button>` elements calling `window.open()`. Browsers block this pattern. Fixed by replacing with `<a href="..." target="_blank">`.
 
-Fixed NEXT_PUBLIC_APP_URL in Vercel — share links and email CTAs were showing
-localhost:3000 instead of the production URL. Added correct env var and
-redeployed.
+Ran `npm test` — 41 pass. GitHub Actions green. All 12 docs present. Lighthouse still 91 Accessibility.
 
-Verified all 41 tests passing with npm test. CI green on GitHub Actions.
-Lighthouse mobile: Performance 99, Accessibility 91, Best Practices 100, SEO 100.
-All 12 markdown docs present at repo root. Submitted Google Form.
+Lighthouse mobile final scores: Performance 99, Accessibility 91, Best Practices 100, SEO 100.
+
+Submitted the Google Form.
 
 **What I learned:**
-Share buttons must be anchor tags with href, not button elements with onClick
-handlers — browsers block window.open() calls that aren't triggered by direct
-user interaction on an anchor element.
-
-Environment variables in Vercel need a full redeploy to take effect — just
-saving them in the dashboard isn't enough.
+Always use actual anchor tags for external links. `window.open()` inside a button click handler gets blocked by browsers as a popup.
 
 **Blockers / what I'm stuck on:**
-None — submission complete.
+Nothing. Done.
 
 **Plan for tomorrow:**
-Await Round 2 results.
+Wait for Round 2.
