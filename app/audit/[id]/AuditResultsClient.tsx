@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import SavingsHero from "@/components/audit/SavingsHero";
 import AuditBreakdown from "@/components/audit/AuditBreakdown";
 import ShareAudit from "@/components/audit/ShareAudit";
@@ -99,12 +100,12 @@ export default function AuditResultsClient({ audit }: AuditResultsClientProps) {
 
             {/* Run another audit */}
             <div className="text-center pt-2">
-              <a
+              <Link
                 href="/"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] text-sm text-[var(--text-muted)] hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors"
               >
                 ← Run another audit
-              </a>
+              </Link>
             </div>
           </div>
         </div>
