@@ -1,60 +1,160 @@
 "use client";
+
 import { useState } from "react";
+
 import { APP_URL } from "@/lib/constants";
+
+import { Linkedin } from "lucide-react";
+import { FaXTwitter } from "react-icons/fa6";
 
 interface ShareAuditProps {
   auditId: string;
+  monthlySavings: number;
 }
 
-export default function ShareAudit({ auditId }: ShareAuditProps) {
-  const url = `${APP_URL}/audit/${auditId}`;
-  const [copied, setCopied] = useState(false);
+export default function ShareAudit({
+  auditId,
+  monthlySavings,
+}: ShareAuditProps) {
+
+  const url =
+    `${APP_URL}/audit/${auditId}`;
+
+  const [copied, setCopied] =
+    useState(false);
 
   async function copyLink() {
+
     try {
-      await navigator.clipboard.writeText(url);
+
+      await navigator.clipboard.writeText(
+        url
+      );
+
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+
     } catch {
-      const el = document.createElement("input");
+
+      const el =
+        document.createElement("input");
+
       el.value = url;
+
       document.body.appendChild(el);
+
       el.select();
+
       document.execCommand("copy");
+
       document.body.removeChild(el);
+
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
     }
   }
 
+  const shareText =
+    `SpendLens identified $${monthlySavings}/month in potential AI tooling savings for my stack.`;
+
+  function shareOnX() {
+
+    const shareUrl =
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        shareText
+      )}&url=${encodeURIComponent(
+        url
+      )}`;
+
+    window.open(
+      shareUrl,
+      "_blank"
+    );
+  }
+
+  function shareOnLinkedIn() {
+
+    const shareUrl =
+      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+        url
+      )}`;
+
+    window.open(
+      shareUrl,
+      "_blank"
+    );
+  }
+
   return (
-    <div className="p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)]">
+
+    <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
+
       <h3
-        className="text-sm font-semibold mb-1"
-        style={{ fontFamily: "Syne, sans-serif" }}
+        className="mb-1 text-sm font-semibold"
+        style={{
+          fontFamily:
+            "Syne, sans-serif",
+        }}
       >
         Share this audit
       </h3>
-      <p className="text-xs text-[var(--text-muted)] mb-4">
+
+      <p className="mb-4 text-xs text-[var(--text-muted)]">
         Anyone with this link can view your savings breakdown — no login required.
       </p>
 
+      {/* URL + Copy */}
+
       <div className="flex gap-2">
-        <div className="flex-1 px-3 py-2.5 rounded-lg bg-[var(--surface-2)] border border-[var(--border)] text-xs text-[var(--text-muted)] font-mono truncate">
+
+        <div className="flex-1 truncate rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2.5 font-mono text-xs text-[var(--text-muted)]">
           {url}
         </div>
+
         <button
           onClick={copyLink}
-          className="px-4 py-2 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] text-xs font-medium hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors shrink-0"
+          className="shrink-0 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-4 py-2 text-xs font-medium transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
           aria-label="Copy audit link"
         >
-          {copied ? "Copied ✓" : "Copy"}
+          {copied
+            ? "Copied ✓"
+            : "Copy"}
         </button>
+
       </div>
 
-      <p className="text-xs text-[var(--text-dim)] mt-3">
+      {/* Social Share Buttons */}
+
+      <div className="mt-4 flex flex-wrap gap-3">
+
+        <button
+          onClick={shareOnX}
+          className="flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-4 py-2 text-xs font-medium transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+        >
+          <FaXTwitter size={14} />
+          Share on X
+        </button>
+
+        <button
+          onClick={shareOnLinkedIn}
+          className="flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-4 py-2 text-xs font-medium transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+        >
+          <Linkedin size={14} />
+          Share on LinkedIn
+        </button>
+
+      </div>
+
+      <p className="mt-3 text-xs text-[var(--text-dim)]">
         🔒 Personal details (email, company) are never shown in shared links.
       </p>
+
     </div>
   );
 }
