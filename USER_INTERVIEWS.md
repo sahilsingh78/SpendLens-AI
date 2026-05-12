@@ -1,63 +1,63 @@
 # USER_INTERVIEWS.md
 
-Three conversations with potential users, conducted May 7–9, 2026. Each 10–15 minutes. Names used with permission or initials where preferred.
+Three conversations with potential users, conducted May 7–9, 2026. Each around 10–15 minutes over WhatsApp call and in person. Names used with permission.
 
 ---
 
-## Interview 1 — R.S., CTO, 12-person SaaS startup (Seed), Bengaluru
+## Interview 1 — Sunny, SDE-1, early stage startup, Noida
 
-**Context:** Connected through a college senior who works at the same company. R.S. runs a 5-person engineering team at a B2B SaaS startup building HR automation tooling for Indian SMEs. Currently paying for Cursor Business, ChatGPT Team, and Claude Pro for one person.
+**Context:** Sunny is a batchmate from Galgotias, graduated last year. Got placed at a 15-person B2B SaaS startup in Noida building HR tooling. We caught up over a call — I told him I was building something around AI tool costs and he said "bhai ye toh mujhe bhi chahiye tha."
 
 **Direct quotes:**
 
-> "I set up Cursor Business when we were fundraising — I wanted everything to look professional. We never actually used the admin controls. I just never got around to downgrading."
+> "Humari company mein Cursor Business hai sab engineers ke liye but 3 log toh sirf VS Code use karte hain. Cursor unke laptop pe pada hai. Koi cancel nahi karta kyunki process complicated lagti hai."
 
-> "Honestly I don't know what our total AI bill is. It's spread across 3-4 different credit cards and the founder's personal account. I'd have to spend an hour just to add it up."
+> "Mujhe nahi pata exactly kitna jaata hai AI tools pe. Boss ne setup kiya tha, credit card unka hai. Main toh bas use karta hoon."
 
-> "Show me the number and I'll act on it the same day. Generic 'you could save money' doesn't move me."
+> "Agar koi tool bata de exact kitna waste ho raha hai with actual number — I would forward it to my manager same day. But it has to be specific, not just 'you can save money.'"
 
 **Most surprising thing they said:**
-R.S. mentioned they were paying for GitHub Copilot Business for all 5 engineers but when he asked the team, only 2 used it daily. The other 3 had switched to Cursor but nobody cancelled the Copilot seats. He was paying for both simultaneously for 3 people — roughly $57/month in pure waste he hadn't noticed.
+Sunny told me their company had GitHub Copilot Business AND Cursor Business running simultaneously for the same 4 engineers. Nobody had audited this — they just kept adding tools whenever someone requested one. That's around $236/month for 4 people just on code editors, which is genuinely insane when you think about it.
 
 **What it changed:**
-I made the recommendation reasoning more explicit about overlapping tools. If a user has both Cursor and GitHub Copilot, the engine now flags the overlap and asks them to confirm both are actively used — rather than assuming both are justified.
+I added explicit overlap detection to the recommendation engine. If someone has both Cursor and GitHub Copilot, the engine now specifically flags this and asks them to confirm both are actively used before assuming both are justified. The reason string says "having both Cursor and Copilot for the same developers is likely redundant — verify active usage before next renewal."
 
 ---
 
-## Interview 2 — A.M., Founder/solo dev, pre-revenue, Pune
+## Interview 2 — Prince, final year CSE, Galgotias (building a side project)
 
-**Context:** Found through an IndieHackers India WhatsApp group. A.M. is building a legal document automation tool solo. 8 months in, bootstrapped. Paying for Claude Pro ($20/mo) and ChatGPT Plus ($20/mo) simultaneously.
+**Context:** Prince is in my class. He's been building a resume parser side project for 3 months — trying to get it to a point where he can show it in interviews. Caught him in the library. He uses ChatGPT Plus and pays for it from his own pocket.
 
 **Direct quotes:**
 
-> "I use Claude for writing the long legal summaries and ChatGPT when Claude refuses something or gives a weird answer. So I pay for both."
+> "ChatGPT Plus le rakha hai $20/month ka — ghar pe bolunga toh rok denge isliye khud pay karta hoon card se. Lekin honestly kuch din toh use hi nahi karta."
 
-> "At pre-revenue stage, $40 a month on two AI subscriptions that do roughly the same thing is actually meaningful. That's like 3000 rupees going nowhere."
+> "Free wala bhi tha pehle, Plus isliye liya kyunki GPT-4 chahiye tha. But ab jo GPT-4o free mein de raha hai woh bhi same lagta hai mujhe."
 
-> "I assumed I needed both. I never actually tested if one was enough."
+> "Sach batao — agar koi bata de ki free tier se kaam chalega, main aaj cancel kar deta hoon. $20 mere liye bade hain abhi."
 
 **Most surprising thing they said:**
-A.M. hadn't tried using Claude's free tier as a fallback. He assumed free tiers were too limited to be useful — but for his use case (occasional fallback queries) the free tier would have been completely sufficient. He was paying $20/month for a fallback he used maybe 5 times a week.
+Prince didn't know GPT-4o is available on the free tier now. He was paying $20/month specifically to access GPT-4 level models — and OpenAI had already made that free months ago. He was paying for something he could get for free and just didn't know. He cancelled the subscription while we were still talking.
 
 **What it changed:**
-I added language to the overlap recommendation that specifically mentions the free tier as a viable fallback option — not just "pick one paid plan." This is more actionable and saves more money for solo founders.
+This made me add a check in the audit engine for ChatGPT Plus users with low team size — if it's a single user doing general writing/research, the engine now surfaces "GPT-4o is now available on the free tier — verify if Plus is still necessary for your specific use case." It's not a hard recommendation but it prompts the right question.
 
 ---
 
-## Interview 3 — P.K., Engineering Lead, 20-person startup, Mumbai
+## Interview 3 — Sanklap, intern at a product startup, Delhi
 
-**Context:** LinkedIn cold message — P.K. had posted about AI tooling costs in a startup founders group. He leads a 4-person engineering team at a fintech startup. Company uses Anthropic API for their core product (~$600/month), plus Cursor Pro for all 4 engineers ($60/month), plus Claude Team ($120/month).
+**Context:** Sanklap is a friend from school, currently doing a 6-month internship at a 30-person product startup in Delhi. He's on the engineering team. We talked over WhatsApp voice call for about 12 minutes.
 
 **Direct quotes:**
 
-> "The API cost I track carefully because it scales with usage. The SaaS subscriptions I just auto-pay and forget — they feel fixed even when they're not."
+> "Company ne Claude Team diya hai sab ko — $30 per seat. Hum 8 engineers hain toh $240/month. But honestly main mostly Claude free use karta hoon personally, company wala sirf office kaam ke liye."
 
-> "I didn't know you could get discounted API credits. In India we already pay a dollar-to-rupee premium on everything — if there's a way to reduce the base price I want to know."
+> "Humara manager ne bola tha Anthropic API bhi use kar sakte ho projects ke liye but koi track nahi karta kitna spend ho raha hai. Last month $400 gaya API pe — kisi ko nahi pata tha."
 
-> "Six hundred dollars a month on Anthropic API sounds like a lot but I genuinely don't know if that's normal for a fintech product our size. What's the benchmark?"
+> "Ek tool hona chahiye jo simply bata de — yeh kitna ja raha hai aur yeh sahi hai ya nahi. Abhi toh 4 alag dashboards mein jaana padta hai."
 
 **Most surprising thing they said:**
-P.K. pointed out that Indian startups face an additional pain point — they're paying USD prices but generating INR revenue, so every dollar saved is disproportionately valuable during early stages. This reframing made me realize the tool's value proposition is actually stronger for Indian users than for US users at the same absolute dollar amount.
+Sanklap said their Anthropic API spend was $400 last month and nobody on the team knew. No alerts, no budget tracking, no visibility. The founder only found out when the monthly invoice came. At $400/month that's exactly the threshold where Credex credits would save them ~$140/month — but they didn't even know they were spending that much.
 
 **What it changed:**
-Two things: (1) The Credex CTA copy was updated to include "same official API endpoints, no usage restrictions" — P.K.'s first reaction to discounted credits was "is this legit?" and I needed to address that directly. (2) The benchmark data in `data/benchmark-data.ts` now includes stage-appropriate comparisons so users can answer "is my spend normal?" — exactly the question P.K. was asking.
+Two things. First — the credits recommendation now triggers at $200+ monthly API spend with more urgency in the reason string. Second — I added the benchmark card to the results page specifically because of Ayan's question "is this normal?" — now every audit shows "companies your size average $X/dev/month" so users have a reference point without having to guess.
